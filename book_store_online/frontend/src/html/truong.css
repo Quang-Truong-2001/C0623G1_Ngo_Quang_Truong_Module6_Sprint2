@@ -25,24 +25,68 @@ body{
     }
 }
 nav i{
-    font-size: 25px;
-    color: white;
+    font-size: 23px;
+    color: #1a1a1a;
 }
-nav, footer{
+nav i .find{
+    font-size: 20px;
+    color: #ffffff;
+}
+nav, .footer{
 
-    background: #fccb90;
+    background: white;
     margin: 0;
     /*background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);*/
     /*background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);*/
 
 }
+nav input, nav a{
+    height: 44px;
+    margin-top: 6px;
+}
 .list-book{
     background-color: white;
+}
+.content{
+    margin-top: 95px;
+    margin-bottom: 15px;
+}
+.content .image-big img{
+    height: 900px;
+}
+.content .description{
+    min-height: 458px;
+}
+.content .buy{
+    min-height: 564px;
+}
+.content .btn-buy{
+    background-color: #ff424e;
+    color: white;
+}
+.content .detail img{
+    margin-top: 5px;
+    margin-right: 5px;
+    object-fit: contain;
+}
+.content .detail p{
+    margin: 0;
+    font-size: 16px;
 }
 .carousel-item img{
     height: 400px;
     object-fit: contain;
 }
-footer i{
+.footer i{
     margin-right: 10px;
+}
+.content .cart img{
+    height: 100px;
+
+}
+.content .cart{
+    min-height: 365px;
+}
+.content .cart table{
+   min-height: 334px;
 }

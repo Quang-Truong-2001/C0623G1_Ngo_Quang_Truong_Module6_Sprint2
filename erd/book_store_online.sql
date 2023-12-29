@@ -85,17 +85,34 @@ CREATE TABLE images (
     FOREIGN KEY (book_id)
         REFERENCES books (id)
 );
-CREATE TABLE orders (
+CREATE TABLE carts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     quantity INT NOT NULL,
-    order_date DATETIME NOT NULL,
-    total_pay DOUBLE NOT NULL,
+    is_delete BIT(1) DEFAULT 0,
     book_id INT,
     FOREIGN KEY (book_id)
         REFERENCES books (id),
     account_id INT,
     FOREIGN KEY (account_id)
         REFERENCES accounts (id)
+);
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_date DATETIME NOT NULL,
+    account_id INT,
+    FOREIGN KEY (account_id)
+        REFERENCES accounts (id)
+);
+CREATE TABLE order_details (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quantity INT NOT NULL,
+    total_pay DOUBLE NOT NULL,
+    order_id INT,
+    FOREIGN KEY (order_id)
+        REFERENCES orders(id),
+          book_id INT,
+    FOREIGN KEY (book_id)
+        REFERENCES books (id)
 );
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
