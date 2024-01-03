@@ -3,6 +3,8 @@ package com.example.backend.dto;
 public interface IBookDto {
     Long getId();
     String getName();
+    Double getDiscountPercent();
+    String getImage();
     String getIntro();
     String getContent();
     Long getQuantity();

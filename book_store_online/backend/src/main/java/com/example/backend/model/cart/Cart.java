@@ -13,18 +13,14 @@ public class Cart {
     private Long id;
     private Long quantity;
 
-    private Double price;
-
     @Column(name = "is_delete", columnDefinition = "bit(1) default 0")
     private Boolean isDelete;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 

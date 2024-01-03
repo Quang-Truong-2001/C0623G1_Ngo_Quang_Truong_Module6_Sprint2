@@ -1,12 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import * as bookService from "../services/BookService"
+import async from "async";
+import {useParams} from "react-router-dom";
 
 function Detail(props) {
+    const {id}=useParams();
+    const [book,setBook]=useState();
+    const [amount,setAmount]=useState(1);
+    const getBookById= async ()=>{
+        let res= await bookService.getBookById(id);
+        setBook(res);
+    }
+
+    useEffect(()=>{
+        getBookById();
+    },[]);
+    if(!book) return null;
     return (
         <div className="row m-0 p-0">
             <div className="detail col-lg-4 col-xl-4 col-sm-12 col-md-12">
                 <div className="image-big card rounded-3 mb-3">
                     <img className="my-5"
-                         src="https://salt.tikicdn.com/cache/750x750/ts/product/94/32/30/9e9b8e97c8849dc355060fc422a356aa.jpg.webp"
+                         src={book.image}
                          alt=""/>
                 </div>
             </div>
@@ -17,13 +32,16 @@ function Detail(props) {
                             <img className="img-detail"
                                 srcSet="https://salt.tikicdn.com/ts/upload/d7/56/04/b93b8c666e13f49971483596ef14800f.png"
                                 width="89" height="20" alt="is_authentic"/>
-                                <p>Tác giả: José Mauro de Vasconcelos</p>
+                                <p>Tác giả: <span>{book.author.name}</span></p>
                         </div>
                         <div className="d-flex align-items-center mt-2">
-                            <h6 className="ms-1">Cây cam ngọt của tôi</h6>
+                            <h6 className="ms-1">{book.name}</h6>
                         </div>
                         <div className="d-flex align-items-center mt-1">
-                            <h5 className="ms-1">99.000 đ</h5>
+                            <h5 className="ms-1 text-danger">{(book.price-(book.price*book.discount.percent)).toLocaleString('vi', {
+                                style: 'currency',
+                                currency: 'VND'
+                            })}</h5>
                         </div>
                     </div>
                 </div>
@@ -33,21 +51,13 @@ function Detail(props) {
                             <h6 className="ms-1">Mô tả sản phẩm</h6>
                         </div>
                         <div className="d-flex align-items-center mt-1">
-                            <p className="ms-1">“Vị chua chát của cái nghèo hòa trộn với vị ngọt ngào khi khám phá ra
-                                những điều khiến cuộc đời này đáng số một tác phẩm kinh điển của Brazil.”</p>
+                            <p className="ms-1">{book.intro}</p>
                         </div>
                         <div className="d-flex align-items-center mt-2">
-                            <h6 className="ms-1">Tác giả</h6>
+                            <h6 className="ms-1">Nội dung</h6>
                         </div>
                         <div className="d-flex align-items-center mt-1">
-                            <p className="ms-1">JOSÉ MAURO DE VASCONCELOS (1920-1984) là nhà văn người Brazil. Sinh ra
-                                trong một gia đình nghèo ở ngoại ô Rio de Janeiro, lớn lên ông phải làm đủ nghề để kiếm
-                                sống. Nhưng với tài kể chuyện thiên bẩm, trí nhớ phi thường, trí tưởng tượng tuyệt vời
-                                cùng vốn sống phong phú, José cảm thấy trong mình thôi thúc phải trở thành nhà văn nên
-                                đã bắt đầu sáng tác năm 22 tuổi. Tác phẩm nổi tiếng nhất của ông là tiểu thuyết mang màu
-                                sắc tự truyện Cây cam ngọt của tôi. Cuốn sách được đưa vào chương trình tiểu học của
-                                Brazil, được bán bản quyền cho hai mươi quốc gia và chuyển thể thành phim điện ảnh.
-                                Ngoài ra, José còn rất thành công trong vai trò diễn viên điện ảnh và biên kịch.</p>
+                            <p className="ms-1">{book.content}</p>
                         </div>
                     </div>
                 </div>
@@ -56,14 +66,19 @@ function Detail(props) {
                 <div className="buy card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
                     <h6 className="mt-3 mx-4">Số lượng: </h6>
                     <div className="d-flex mt-3 mx-4">
-                        <button className="btn btn-outline-dark">-</button>
-                        <button className="btn btn-outline-dark mx-2">1</button>
-                        <button className="btn btn-outline-dark">+</button>
+                        {amount>1?
+                            <button className="btn btn-outline-dark" onClick={()=>{setAmount(amount-1)}}>-</button>:null
+                        }
+                        <button className="btn btn-outline-dark mx-2">{amount}</button>
+                        <button className="btn btn-outline-dark" onClick={()=>{setAmount(amount+1)}}>+</button>
                     </div>
                     <button className="mt-3 mx-4 btn btn-buy">Mua ngay</button>
                     <button className="mt-3 mx-4 btn btn-outline-primary">Thêm vào giỏ hàng</button>
                     <h6 className="mt-3 mx-4">Tạm tính: </h6>
-                    <h5 className="mt-1 mx-4">99.000 đ </h5>
+                    <h5 className="mt-1 mx-4">{(amount*(book.price-(book.price*book.discount.percent))).toLocaleString('vi', {
+                        style: 'currency',
+                        currency: 'VND'
+                    })} </h5>
                 </div>
             </div>
         </div>

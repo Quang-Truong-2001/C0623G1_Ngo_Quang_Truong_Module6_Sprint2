@@ -13,8 +13,8 @@ public class CartServiceImpl implements ICartService {
     private ICartRepository repository;
 
     @Override
-    public List<Cart> showList() {
-        return repository.showList();
+    public List<Cart> showList(Long id) {
+        return repository.showList(id);
     }
 
     @Override
@@ -30,5 +30,10 @@ public class CartServiceImpl implements ICartService {
     @Override
     public Cart findCartById(Long id) {
         return repository.findCartById(id);
+    }
+
+    @Override
+    public void updateCart(Long id, Long quantity) {
+        repository.updateCart(id, quantity);
     }
 }

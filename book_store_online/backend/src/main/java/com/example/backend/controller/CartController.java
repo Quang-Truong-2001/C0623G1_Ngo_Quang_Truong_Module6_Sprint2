@@ -23,9 +23,9 @@ public class CartController {
     private IAccountService accountService;
     @Autowired
     private IBookService bookService;
-    @GetMapping("")
-    public ResponseEntity<?> showList(){
-        List<Cart> list=service.showList();
+    @GetMapping("/{id}")
+    public ResponseEntity<?> showList(@PathVariable("id") Long id){
+        List<Cart> list=service.showList(id);
         if(list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -41,17 +41,6 @@ public class CartController {
         service.saveCart(cart);
         return new ResponseEntity<>(cart,HttpStatus.OK);
     }
-
-    @PatchMapping("/update")
-    public ResponseEntity<?> updateCart(@RequestBody CartDto cartDto){
-        Cart cart=new Cart();
-        BeanUtils.copyProperties(cartDto,cart);
-        cart.setAccount(accountService.findAccountById(cartDto.getIdAccount()));
-        cart.setBook(bookService.findBookById(cartDto.getIdBook()));
-        cart.setDelete(false);
-        service.saveCart(cart);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable("id") Long id){
         Cart cart=service.findCartById(id);
@@ -59,6 +48,15 @@ public class CartController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         service.deleteCart(id);
+        return new ResponseEntity<>(cart,HttpStatus.OK);
+    }
+    @PatchMapping("/update_quantity")
+    public ResponseEntity<?> updateQuantity(@RequestParam("id") Long id,@RequestParam("quantity") Long quantity){
+        Cart cart=service.findCartById(id);
+        if (cart==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        service.updateCart(id, quantity);
         return new ResponseEntity<>(cart,HttpStatus.OK);
     }
 
