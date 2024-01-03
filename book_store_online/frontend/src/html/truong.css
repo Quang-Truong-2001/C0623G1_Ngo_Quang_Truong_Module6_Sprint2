@@ -32,7 +32,7 @@ nav i .find{
     font-size: 20px;
     color: #ffffff;
 }
-nav, .footer{
+nav{
 
     background: white;
     margin: 0;
@@ -40,19 +40,37 @@ nav, .footer{
     /*background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);*/
 
 }
+.footer{
+    background-color: white;
+}
+nav .logo{
+    width: 115px;
+    position: relative;
+    top: -20px;
+}
 nav input, nav a{
     height: 44px;
     margin-top: 6px;
 }
 .list-book{
-    background-color: white;
+
 }
 .content{
-    margin-top: 95px;
-    margin-bottom: 15px;
+    background-color: #eee;
+    margin-top: 100px;
+    margin-bottom: 0;
 }
-.content .image-big img{
-    height: 900px;
+.btn-find, .btn-find :hover{
+    background-color: #d22633;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    width: 60px;
+}
+.btn-find .find{
+    color: white;
 }
 .content .description{
     min-height: 458px;
@@ -89,4 +107,11 @@ nav input, nav a{
 }
 .content .cart table{
    min-height: 334px;
+}
+.login img{
+    width: 185px;
+}
+.detail .img-detail{
+    height: 20px;
+    opacity: 1;
 }
