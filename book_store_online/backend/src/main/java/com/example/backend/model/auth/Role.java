@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.model.auth;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

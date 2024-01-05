@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import * as bookService from "../services/BookService"
+import * as bookService from "../../services/BookService"
 import async from "async";
 import {useParams} from "react-router-dom";
 

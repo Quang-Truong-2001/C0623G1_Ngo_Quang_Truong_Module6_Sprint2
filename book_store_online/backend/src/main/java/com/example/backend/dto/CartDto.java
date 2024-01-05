@@ -1,11 +1,5 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.Account;
-import com.example.backend.model.book.Book;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 public class CartDto {
     private Long id;
     private Long quantity;

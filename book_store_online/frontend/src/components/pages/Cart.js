@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import * as cartService from "../services/CartService"
+import * as cartService from "../../services/CartService"
 import {toast} from "react-toastify";
+import AcessDenied from "../errors/AcessDenied";
 function Cart(props) {
+    const user = JSON.parse(localStorage.getItem('user'));
+
     let id=2;
     const [list,setList]=useState([]);
     const [deleteBook,setDeleteBook]=useState({
@@ -26,6 +29,9 @@ function Cart(props) {
     useEffect(()=>{
         getAllCartById();
     },[])
+    if(!user){
+        return <AcessDenied/>
+    }
 
     return (
         <div className="cart m-0 p-0">

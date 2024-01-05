@@ -1,6 +1,6 @@
 package com.example.backend.model.book;
 
-import com.example.backend.model.Account;
+import com.example.backend.model.auth.Account;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

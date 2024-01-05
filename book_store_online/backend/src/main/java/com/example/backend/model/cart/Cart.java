@@ -1,8 +1,7 @@
 package com.example.backend.model.cart;
 
-import com.example.backend.model.Account;
+import com.example.backend.model.auth.Account;
 import com.example.backend.model.book.Book;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity

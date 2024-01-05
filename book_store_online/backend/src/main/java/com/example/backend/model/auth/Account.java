@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.model.auth;
 
 import com.example.backend.model.book.OrderBook;
 import com.example.backend.model.cart.Cart;

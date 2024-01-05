@@ -2,6 +2,9 @@ import React from 'react';
 import {Link} from "react-router-dom";
 
 function Header(props) {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+
     return (
         <div className="position-fixed w-100 z-1 top-0">
             <nav className="navbar navbar-expand-lg shadow navbar-light p-0">
@@ -51,10 +54,17 @@ function Header(props) {
                                 <li className="nav-item me-5">
                                     <Link to="/cart" className="nav-link text-uppercase"><i className="bi bi-cart"></i></Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link to="/login" className="nav-link mb-3 text-uppercase"><i
-                                        className="bi bi-person-circle"></i></Link>
-                                </li>
+                                {!user?
+                                    <li className="nav-item">
+                                        <Link to="/login" className="nav-link mb-3 text-uppercase"><i
+                                            className="bi bi-person-circle"></i></Link>
+                                    </li>
+                                    : <li className="nav-item">
+                                        <Link to="/logout" className="nav-link mb-3 text-uppercase"><i
+                                            className="bi bi-person-circle"></i></Link>
+                                    </li>
+                                }
+
                             </ul>
                         </div>
                 </div>

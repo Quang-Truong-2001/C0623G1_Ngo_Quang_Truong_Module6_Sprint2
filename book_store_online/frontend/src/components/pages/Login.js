@@ -1,6 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
+import * as Yup from "yup";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import * as authService from "../../services/AuthService"
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import {loginUser} from "../../redux/middlewares/AuthMiddleware";
+import {useDispatch} from "react-redux";
+
 
 function Login(props) {
+    const [disableSubmit, setDisableSubmit] = useState(false);
+    const dispatch = useDispatch();
+    const navigate=useNavigate();
+    const initValues = {
+        username: "",
+        password: ""
+    }
+
+    const validateFormLogin = Yup.object({
+        username: Yup.string()
+            .required("Vui lòng nhập tên đăng nhập."),
+        password: Yup.string()
+            .required("Vui lòng nhập mật khẩu.")
+    });
+    const handleSubmitFormLogin = async (values) => {
+        let res=await authService.login(values);
+        if(res.status===200){
+            toast.success("Đăng nhập thành công");
+            await dispatch(loginUser(values));
+            navigate("/manage");
+        }
+    }
     return (
         <div className="login gradient-form my-5">
             <div className="container p-2">
@@ -10,36 +40,43 @@ function Login(props) {
                             <div className="row g-0">
                                 <div className="col-lg-6">
                                     <div className="card-body p-md-5 mx-md-4">
-
                                         <div className="text-center">
                                             <img
                                                 src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp" alt="logo"/>
                                                 <h4 className="mt-1 mb-5 pb-1">Quang Truong Book Store</h4>
                                         </div>
+                                        <Formik initialValues={initValues}
+                                                onSubmit={values => {handleSubmitFormLogin(values)}}
+                                                validationSchema={validateFormLogin}>
+                                            <Form>
+                                                <p>Đăng nhập vào tài khoản của bạn</p>
 
-                                        <form>
-                                            <p>Đăng nhập vào tài khoản của bạn</p>
+                                                <div className="form-outline mb-4">
+                                                    <label className="form-label" htmlFor="form2Example11">Tên tài
+                                                        khoản</label>
+                                                    <Field name="username" type="text" id="form2Example11" className="form-control"
+                                                           placeholder="Nhập tên tài khoản"/>
+                                                    <ErrorMessage name="username" className="text-danger"
+                                                                  component="small"/>
+                                                </div>
 
-                                            <div className="form-outline mb-4">
-                                                <label className="form-label" htmlFor="form2Example11">Tên tài
-                                                    khoản</label>
-                                                <input type="email" id="form2Example11" className="form-control"
-                                                       placeholder="Nhập tên tài khoản"/>
-                                            </div>
+                                                <div className="form-outline mb-4">
+                                                    <label className="form-label" htmlFor="form2Example22">Mật khẩu</label>
+                                                    <Field name="password" type="password" id="form2Example22" placeholder="Nhập mật khẩu"
+                                                           className="form-control"/>
+                                                    <ErrorMessage name="password" className="text-danger"
+                                                                  component="small"/>
+                                                </div>
 
-                                            <div className="form-outline mb-4">
-                                                <label className="form-label" htmlFor="form2Example22">Mật khẩu</label>
-                                                <input type="password" id="form2Example22" placeholder="Nhập mật khẩu"
-                                                       className="form-control"/>
-                                            </div>
+                                                <div className="row">
+                                                    <button
+                                                        className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-4 px-3"
+                                                        type="submit">Đăng nhập
+                                                    </button>
+                                                </div>
 
-                                            <div className="row">
-                                                <button
-                                                    className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-4 px-3"
-                                                    type="button">Đăng nhập
-                                                </button>
-                                            </div>
-                                        </form>
+                                            </Form>
+                                        </Formik>
 
                                     </div>
                                 </div>

@@ -1,8 +1,7 @@
-package com.example.backend.model;
+package com.example.backend.model.auth;
 
 import jakarta.persistence.*;
 
-import javax.xml.crypto.Data;
 import java.sql.Date;
 
 @Entity

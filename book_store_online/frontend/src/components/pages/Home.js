@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import * as bookService from "../services/BookService"
+import * as bookService from "../../services/BookService"
 
 function Home(props) {
     const [list, setList] = useState([]);
