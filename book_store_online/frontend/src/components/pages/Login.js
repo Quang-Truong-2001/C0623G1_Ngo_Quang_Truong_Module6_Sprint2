@@ -12,7 +12,7 @@ function Login(props) {
     const [disableSubmit, setDisableSubmit] = useState(false);
     const dispatch = useDispatch();
     const navigate=useNavigate();
-    const initValues = {
+    const initValues={
         username: "",
         password: ""
     }
@@ -23,13 +23,23 @@ function Login(props) {
         password: Yup.string()
             .required("Vui lòng nhập mật khẩu.")
     });
-    const handleSubmitFormLogin = async (values) => {
-        let res=await authService.login(values);
-        if(res.status===200){
-            toast.success("Đăng nhập thành công");
+    const handleSubmitFormLogin = async (values,{setFieldError}) => {
+        try {
+            setDisableSubmit(true);
             await dispatch(loginUser(values));
-            navigate("/manage");
+            toast.success("Đăng nhập thành công !");
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(user.roles.includes("ROLE_ADMIN")){
+                window.location.href = '/manage';
+            } else {
+                window.location.href = '/';
+            }
+
+        } catch (e){
+                setDisableSubmit(false);
+            // setFieldError("password",e.data);
         }
+
     }
     return (
         <div className="login gradient-form my-5">
@@ -46,7 +56,7 @@ function Login(props) {
                                                 <h4 className="mt-1 mb-5 pb-1">Quang Truong Book Store</h4>
                                         </div>
                                         <Formik initialValues={initValues}
-                                                onSubmit={values => {handleSubmitFormLogin(values)}}
+                                                onSubmit={(values, {setFieldError}) => handleSubmitFormLogin(values, {setFieldError})}
                                                 validationSchema={validateFormLogin}>
                                             <Form>
                                                 <p>Đăng nhập vào tài khoản của bạn</p>
@@ -70,7 +80,7 @@ function Login(props) {
 
                                                 <div className="row">
                                                     <button
-                                                        className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-4 px-3"
+                                                        className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-4 px-3" disabled={disableSubmit}
                                                         type="submit">Đăng nhập
                                                     </button>
                                                 </div>

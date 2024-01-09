@@ -33,6 +33,12 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
+    public Cart findCartByIdAccountAndIdBook(Long idAccount, Long idBook) {
+        return repository.findCartByIdAccountAndIdBook(idAccount,idBook);
+    }
+
+
+    @Override
     public void updateCart(Long id, Long quantity) {
         repository.updateCart(id, quantity);
     }

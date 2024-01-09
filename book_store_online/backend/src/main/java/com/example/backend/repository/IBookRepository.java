@@ -11,12 +11,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface IBookRepository extends JpaRepository<Book, Integer> {
-    @Query(value = "select b.id as id, b.name as name,b.image as image, b.intro as intro, b.content as content, b.quantity as quantity, b.price as price, a.name as nameAuthor, d.percent as discountPercent\n" +
+    @Query(value = "select b.id as id, b.name as name,b.image as image, b.intro as intro, b.content as content, b.quantity as quantity, b.price as price, a.name as nameAuthor, b.sale_price as salePrice\n" +
             "from books as b\n" +
             "join authors as a\n" +
             "on b.author_id=a.id\n" +
-            "join discounts as d\n" +
-            "on b.discount_id=d.id\n" +
             "where b.is_delete = 0 and b.name like :name and a.name like :author and (b.price between :minPrice and :maxPrice)", nativeQuery = true)
     Page<IBookDto> showList(Pageable pageable, @Param("name") String name, @Param("author") String author, @Param("minPrice") String minPrice, @Param("maxPrice") String maxPrice);
 

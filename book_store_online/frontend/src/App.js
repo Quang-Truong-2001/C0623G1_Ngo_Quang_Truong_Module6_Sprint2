@@ -10,6 +10,7 @@ import Detail from "./components/pages/Detail";
 import {ToastContainer} from "react-toastify";
 import ManagerStore from "./components/pages/ManagerStore";
 import 'react-toastify/dist/ReactToastify.css';
+import ModalLogout from "./components/common/ModalLogout";
 
 
 
@@ -17,7 +18,7 @@ function App() {
     return (
         <>
             <Header/>
-            <div className="content">
+            <div className="content" style={{minHeight: "58vh"}}>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/detail/:id" element={<Detail/>}/>
                     <Route path="/manage" element={<ManagerStore/>}/>
                 </Routes>
+                <ModalLogout/>
             </div>
             <Footer/>
             <ToastContainer/>

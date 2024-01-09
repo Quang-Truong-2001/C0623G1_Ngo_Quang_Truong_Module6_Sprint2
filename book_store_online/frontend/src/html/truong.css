@@ -118,3 +118,19 @@ nav input, nav a{
 .logo-footer{
     width: 190px;
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+.cart-number{
+    background-color: red;
+    color: rgba(0, 0, 0, 0.93);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: relative;
+    top: -40px;
+    right: -10px;
+}

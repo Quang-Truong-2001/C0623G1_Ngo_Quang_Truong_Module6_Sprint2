@@ -11,9 +11,13 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long quantity;
+    private Double salePrice;
+    @Column(name = "is_checkbox",columnDefinition = "bit(1) default 0")
+    private Boolean isCheckBox;
 
     @Column(name = "is_delete", columnDefinition = "bit(1) default 0")
     private Boolean isDelete;
+
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
@@ -64,5 +68,21 @@ public class Cart {
 
     public void setDelete(Boolean delete) {
         isDelete = delete;
+    }
+
+    public Double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public Boolean getCheckBox() {
+        return isCheckBox;
+    }
+
+    public void setCheckBox(Boolean checkBox) {
+        isCheckBox = checkBox;
     }
 }

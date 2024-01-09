@@ -21,6 +21,7 @@ public class Book {
     private String content;
     private Long quantity;
     private Double price;
+    private Double salePrice;
     @Column(name = "is_delete", columnDefinition = "bit(1) default 0")
     private Boolean isDelete;
     @ManyToOne
@@ -33,9 +34,7 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonBackReference
     private Set<Cart> cart;
-    @ManyToOne
-    @JoinColumn(name = "discount_id",referencedColumnName = "id")
-    private Discount discount;
+
 
     public Book() {
     }
@@ -128,11 +127,11 @@ public class Book {
         this.price = price;
     }
 
-    public Discount getDiscount() {
-        return discount;
+    public Double getSalePrice() {
+        return salePrice;
     }
 
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
     }
 }

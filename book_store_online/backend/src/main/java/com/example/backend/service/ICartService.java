@@ -10,5 +10,7 @@ public interface ICartService {
     void saveCart(Cart cart);
     void deleteCart(Long id);
     Cart findCartById(Long id);
+
+    Cart findCartByIdAccountAndIdBook(Long idAccount,Long idBook);
     void updateCart(Long id,Long quantity);
 }

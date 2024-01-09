@@ -31,15 +31,25 @@ public class CartController {
         }
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> createCart(@RequestBody CartDto cartDto){
-        Cart cart=new Cart();
-        BeanUtils.copyProperties(cartDto,cart);
-        cart.setAccount(accountService.findAccountById(cartDto.getIdAccount()));
-        cart.setBook(bookService.findBookById(cartDto.getIdBook()));
-        cart.setDelete(false);
+        Cart cart=service.findCartByIdAccountAndIdBook(cartDto.getIdAccount(), cartDto.getIdBook());
+        if(cart==null){
+            cart=new Cart();
+            BeanUtils.copyProperties(cartDto,cart);
+            cart.setAccount(accountService.findAccountById(cartDto.getIdAccount()));
+            cart.setBook(bookService.findBookById(cartDto.getIdBook()));
+            cart.setSalePrice(cartDto.getSalePrice());
+            cart.setCheckBox(false);
+            cart.setDelete(false);
+        } else {
+            cart.setQuantity(cart.getQuantity()+ cartDto.getQuantity());
+        }
         service.saveCart(cart);
         return new ResponseEntity<>(cart,HttpStatus.OK);
+
+
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable("id") Long id){

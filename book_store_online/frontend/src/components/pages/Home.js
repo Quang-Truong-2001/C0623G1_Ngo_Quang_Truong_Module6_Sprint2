@@ -56,7 +56,10 @@ function Home(props) {
                                      alt=""/>
                                 <p className="mt-3 fw-medium">{item.name}</p>
                                 <div className="d-flex justify-content-around">
-                                    <p className="text-danger mb-3 rounded-2">{(item.price - (item.price * item.discountPercent)).toLocaleString('vi', {
+                                    <p className="text-danger mb-3 rounded-2"> <span className="me-2 text-dark rounded-2 text-decoration-line-through">{item.price.toLocaleString('vi', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    })}</span>{item.salePrice.toLocaleString('vi', {
                                         style: 'currency',
                                         currency: 'VND'
                                     })}</p>

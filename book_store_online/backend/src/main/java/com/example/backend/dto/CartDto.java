@@ -3,6 +3,7 @@ package com.example.backend.dto;
 public class CartDto {
     private Long id;
     private Long quantity;
+    private Double salePrice;
     private Boolean isDelete;
     private Long idBook;
     private Long idAccount;
@@ -48,5 +49,13 @@ public class CartDto {
 
     public void setIdAccount(Long idAccount) {
         this.idAccount = idAccount;
+    }
+
+    public Double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
     }
 }

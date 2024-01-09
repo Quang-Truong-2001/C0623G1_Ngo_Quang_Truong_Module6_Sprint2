@@ -24,5 +24,7 @@ public interface ICartRepository extends JpaRepository<Cart,Long> {
     @Transactional
     @Query(value = "update carts set quantity= :quantity where id= :id", nativeQuery = true)
     void updateCart(@Param("id") Long id,@Param("quantity") Long quantity);
+    @Query(value = "select * from carts where is_delete = false and account_id = :idAccount and book_id= :idBook",nativeQuery = true)
+    Cart findCartByIdAccountAndIdBook(@Param("idAccount") Long idAccount,@Param("idBook") Long idBook);
 
 }

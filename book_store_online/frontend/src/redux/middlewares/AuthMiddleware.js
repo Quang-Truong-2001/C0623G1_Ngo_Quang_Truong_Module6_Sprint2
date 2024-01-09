@@ -10,7 +10,7 @@ export const loginUser=(account)=>async (dispatch)=>{
             type: GET_USER_LOGIN,
             payload: res.data,
         });
-    } catch (e){
-        throw e
+    } catch (error) {
+        throw error
     }
 };

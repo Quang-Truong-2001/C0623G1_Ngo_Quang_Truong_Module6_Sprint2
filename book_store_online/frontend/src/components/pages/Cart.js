@@ -1,42 +1,71 @@
 import React, {useEffect, useState} from 'react';
 import * as cartService from "../../services/CartService"
 import {toast} from "react-toastify";
-import AcessDenied from "../errors/AcessDenied";
+import AccessDenied from "../errors/AccessDenied";
+import async from "async";
 function Cart(props) {
     const user = JSON.parse(localStorage.getItem('user'));
 
-    let id=2;
+    let id;
     const [list,setList]=useState([]);
     const [deleteBook,setDeleteBook]=useState({
-        "name":"hello"
+        "book":{
+            "name":"hello"
+        }
     });
 
-    const deleteCartById = () => {
-        console.log(deleteBook.id);
-        cartService.deleteCartById(deleteBook.id);
+    const deleteCartById = async () => {
+        await cartService.deleteCartById(deleteBook.id);
         toast.success("Xóa thành công");
-        getAllCartById();
+        await getAllCartById();
     }
     const getAllCartById=async ()=>{
+        id=user.id;
         let res= await cartService.getAllCartByIdAccount(id);
         if(res.status===200){
             setList(res.data);
         } else {
             setList([])
         }
-
     }
+    const increaseAmount=async (item)=>{
+        let is=await cartService.updateCartById(item.id,item.quantity*1+1);
+        if(is){
+            getAllCartById();
+        }
+    }
+    const decreaseAmount=async (item)=>{
+        let is=await cartService.updateCartById(item.id,item.quantity*1-1);
+        if(is){
+            getAllCartById();
+        }
+    }
+
+
+    const changeAmountInput =async (item,e) => {
+        let is=await cartService.updateCartById(item.id,e.target.value*1);
+        if(is){
+            getAllCartById();
+        }
+    }
+
+    const handleChange=(item)=>{
+        console.log(item)
+    }
+
     useEffect(()=>{
-        getAllCartById();
+        if(user){
+            getAllCartById();
+        }
     },[])
     if(!user){
-        return <AcessDenied/>
+        return <AccessDenied/>
     }
 
     return (
-        <div className="cart m-0 p-0">
+        <div className="cart">
             {list.length>0?
-                <div className="row px-3">
+                <div className="row m-0 p-0">
                     <div className="detail col-lg-9 col-xl-9 col-sm-12 col-md-12">
                         <div className="card text-center">
 
@@ -55,31 +84,33 @@ function Cart(props) {
                                 {list.map((item) => (
                                     <tr>
                                         <td scope="row">
-                                            <input type="checkbox"/>
+                                            <input type="checkbox" value={item} onClick={()=>handleChange(item)}/>
                                         </td>
                                         <td>
                                             <img
                                                 src={item.book.image}
                                                 alt=""/>
                                         </td>
-                                        <td>{(item.book.price - (item.book.price * item.book.discount.percent)).toLocaleString('vi', {
+                                        <td>{item.book.salePrice.toLocaleString('vi', {
                                             style: 'currency',
                                             currency: 'VND'
                                         })}</td>
                                         <td>
                                             <div className="d-flex justify-content-center mt-3 mx-4">
-                                                <button className="btn btn-outline-dark">-</button>
-                                                <button className="btn btn-outline-dark mx-2">{item.quantity}</button>
-                                                <button className="btn btn-outline-dark">+</button>
+                                                <button className="btn btn-outline-dark" onClick={()=>decreaseAmount(item)}>-</button>
+                                                <input type="number" style={{width: "60px"}} className="form-control mx-2"
+                                                       onChange={(e)=>changeAmountInput(item,e)}  value={item.quantity.toString()}/>
+                                                <button className="btn btn-outline-dark" onClick={()=>increaseAmount(item)}>+
+                                                </button>
                                             </div>
                                         </td>
-                                        <td>{(item.quantity * (item.book.price - (item.book.price * item.book.discount.percent))).toLocaleString('vi', {
+                                        <td>{(item.book.salePrice*item.quantity).toLocaleString('vi', {
                                             style: 'currency',
                                             currency: 'VND'
                                         })}</td>
                                         <td>
                                             <button onClick={() => {
-                                                setDeleteBook(item.book)
+                                                setDeleteBook(item)
                                             }} className="btn btn-danger" data-bs-toggle="modal"
                                                     data-bs-target="#exampleModal">Xóa
                                             </button>
@@ -132,7 +163,7 @@ function Cart(props) {
                                             aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">
-                                    Bạn có chắc chắn muốn xóa <span className="text-primary">{deleteBook.name}</span> ra
+                                    Bạn có chắc chắn muốn xóa <span className="text-primary">{deleteBook.book.name}</span> ra
                                     khỏi giỏ hàng không?
                                 </div>
                                 <div className="modal-footer">
