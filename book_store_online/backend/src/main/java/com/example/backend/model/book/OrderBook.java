@@ -15,6 +15,8 @@ public class OrderBook {
     private Long id;
     @Column(columnDefinition = "DATETIME")
     private Date dateBuy;
+    private String address;
+    private String phone;
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
@@ -54,5 +56,21 @@ public class OrderBook {
 
     public void setOrderDetails(Set<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

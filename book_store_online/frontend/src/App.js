@@ -11,6 +11,7 @@ import {ToastContainer} from "react-toastify";
 import ManagerStore from "./components/pages/ManagerStore";
 import 'react-toastify/dist/ReactToastify.css';
 import ModalLogout from "./components/common/ModalLogout";
+import ListSearch from "./components/pages/ListSearch";
 
 
 
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/cart" element={<Cart/>}/>
                     <Route path="/detail/:id" element={<Detail/>}/>
                     <Route path="/manage" element={<ManagerStore/>}/>
+                    <Route path="/search" element={<ListSearch/>}/>
                 </Routes>
                 <ModalLogout/>
             </div>

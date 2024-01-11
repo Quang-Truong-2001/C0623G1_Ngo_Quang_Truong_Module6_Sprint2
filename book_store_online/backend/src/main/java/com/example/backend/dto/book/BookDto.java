@@ -1,9 +1,9 @@
-package com.example.backend.dto;
+package com.example.backend.dto.book;
 
 import com.example.backend.model.book.Author;
 import jakarta.persistence.*;
 
-public class BookDto {
+public class BookDto{
     private Long id;
     private String name;
     private String image;
@@ -89,4 +89,6 @@ public class BookDto {
     public void setDelete(Boolean delete) {
         isDelete = delete;
     }
+
+
 }

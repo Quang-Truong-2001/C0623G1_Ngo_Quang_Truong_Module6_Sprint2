@@ -1,6 +1,6 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.IBookDto;
+import com.example.backend.dto.book.IBookDto;
 import com.example.backend.model.book.Author;
 import com.example.backend.model.book.Book;
 import org.springframework.data.domain.Page;

@@ -19,6 +19,8 @@ public class OrderDetail {
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
+    private Double salePrice;
+
     public OrderDetail() {
     }
 
@@ -52,5 +54,13 @@ public class OrderDetail {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public Double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
     }
 }

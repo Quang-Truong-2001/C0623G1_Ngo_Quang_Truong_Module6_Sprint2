@@ -8,6 +8,14 @@ export const login =async (account)=>{
         throw e.response;
     }
 }
+export const getInfo =async (id)=>{
+    try {
+        let res = await axios.get(`http://localhost:8080/api/auth/${id}`);
+        return res.data;
+    } catch (e){
+        return undefined;
+    }
+}
 export default function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'));
 

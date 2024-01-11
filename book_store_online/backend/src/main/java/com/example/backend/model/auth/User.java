@@ -1,5 +1,6 @@
 package com.example.backend.model.auth;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -18,6 +19,7 @@ public class User {
     private String phone;
     private String address;
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "account_id",referencedColumnName = "id")
     private Account account;
 

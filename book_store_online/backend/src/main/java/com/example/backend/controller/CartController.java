@@ -41,7 +41,6 @@ public class CartController {
             cart.setAccount(accountService.findAccountById(cartDto.getIdAccount()));
             cart.setBook(bookService.findBookById(cartDto.getIdBook()));
             cart.setSalePrice(cartDto.getSalePrice());
-            cart.setCheckBox(false);
             cart.setDelete(false);
         } else {
             cart.setQuantity(cart.getQuantity()+ cartDto.getQuantity());

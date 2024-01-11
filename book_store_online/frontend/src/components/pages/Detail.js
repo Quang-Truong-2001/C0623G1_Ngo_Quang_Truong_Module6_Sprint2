@@ -62,6 +62,12 @@ function Detail(props) {
                             <h6 className="ms-1">{book.name}</h6>
                         </div>
                         <div className="d-flex align-items-center mt-1">
+                            <h6 className="ms-1 text-decoration-line-through">{book.price.toLocaleString('vi', {
+                                style: 'currency',
+                                currency: 'VND'
+                            })}</h6>
+                        </div>
+                        <div className="d-flex align-items-center mt-1">
                             <h5 className="ms-1 text-danger">{book.salePrice.toLocaleString('vi', {
                                 style: 'currency',
                                 currency: 'VND'

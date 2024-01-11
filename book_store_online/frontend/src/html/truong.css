@@ -52,22 +52,14 @@ nav input, nav a{
     height: 44px;
     margin-top: 6px;
 }
-.list-book{
-
-}
 .content{
     background-color: #eee;
     margin-top: 100px;
     margin-bottom: 0;
 }
 .btn-find, .btn-find :hover{
-    background-color: #d22633;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: white;
-    width: 60px;
+    height: 44px;
+    margin-top: 6px;
 }
 .btn-find .find{
     color: white;
@@ -92,7 +84,7 @@ nav input, nav a{
     font-size: 16px;
 }
 .carousel-item img{
-    height: 400px;
+    height: 800px;
     object-fit: contain;
 }
 .footer i{
@@ -124,8 +116,10 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 .cart-number{
-    background-color: red;
-    color: rgba(0, 0, 0, 0.93);
+    background-color: #ef2525;
+    color: rgba(255, 255, 255, 0.93);
+    width: 25px;
+    height: 25px;
     display: flex;
     justify-content: center;
     align-items: center;

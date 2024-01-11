@@ -9,7 +9,7 @@ insert into roles(name)
 values 
 ("ROLE_ADMIN"),
 ("ROLE_USER");
-
+	
 insert into account_roles(account_id,role_id)
 values 
 (1,1),
@@ -29,9 +29,16 @@ values
 ("Con Chó Nhỏ Mang Giỏ Hoa Hồng",130000,100000,"","Câu chuyện về 5 chú chó đầy thú vị và cũng không kém cảm xúc lãng mạn- tác phẩm mới nhất của nhà văn bestseller Nguyễn Nhật Ánh sẽ khiến bạn thay đổi nhiều trong cách nhìn về loài thú cưng số 1 thế giới này.","https://salt.tikicdn.com/cache/750x750/ts/product/2d/ff/93/cf76ac4703f587c3188c5438dfb55af3.jpg.webp",40,1),
 ("Làm Bạn Với Bầu Trời",130000,110000,"Một câu chuyện giản dị, chứa đầy bất ngờ cho tới trang cuối cùng. Vẻ đẹp lộng lẫy, vì lòng vị tha và tình yêu thương, khiến mắt rưng rưng vì một nỗi mừng vui hân hoan. Cuốn sách như một đốm lửa thắp lên lòng khát khao sống tốt trên đời.","Viết về điều tốt đã không dễ, viết sao cho người đọc có thể đón nhận đầy cảm xúc tích cực, và muốn được hưởng, được làm những điều tốt dù nhỏ bé mới thật là khó. Làm bạn với bầu trời của Nguyễn Nhật Ánh đã làm được điều này. Như nhà văn từng phát biểu “điểm mạnh của văn chương nằm ở khả năng thẩm thấu. Bằng hình thức đặc thù của mình, văn chương góp phần mài sắc các ý niệm đạo đức nơi người đọc một cách vô hình. Bồi đắp tâm hồn và nhân cách một cách âm thầm và bền bỉ, đó là chức năng gốc rễ của văn chương, đặc biệt là văn chương viết cho thanh thiếu niên.”","https://salt.tikicdn.com/cache/750x750/ts/product/af/a1/4b/92477ec9b6688060b2b5d2022a60d3e6.jpg.webp",40,1)
 ;
-insert into carts(quantity,account_id,book_id)
+insert into carts(quantity,sale_price,account_id,book_id)
 values 
-(3,2,1),
-(2,2,2),
-(1,2,3)
+(3,120000,2,1),
+(2,120000,2,2),
+(1,120000,2,3)
 ;
+
+insert into orders(date_buy,account_id, address) values("2023-12-10",2,"Đà Nẵng");
+insert into order_details(quantity,sale_price, book_id,order_id) values(10,120000,1,1);
+
+
+insert into users(address,birth_day, gender,name,phone,account_id) 
+values("Đà Nẵng","2000-12-10",1,"Nguyễn Văn A","0123456789",2);

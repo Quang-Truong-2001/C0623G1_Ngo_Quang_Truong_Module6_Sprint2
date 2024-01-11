@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import * as Yup from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import * as authService from "../../services/AuthService"
-import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {loginUser} from "../../redux/middlewares/AuthMiddleware";
 import {useDispatch} from "react-redux";
@@ -11,7 +9,6 @@ import {useDispatch} from "react-redux";
 function Login(props) {
     const [disableSubmit, setDisableSubmit] = useState(false);
     const dispatch = useDispatch();
-    const navigate=useNavigate();
     const initValues={
         username: "",
         password: ""
@@ -19,9 +16,13 @@ function Login(props) {
 
     const validateFormLogin = Yup.object({
         username: Yup.string()
-            .required("Vui lòng nhập tên đăng nhập."),
+            .required("Vui lòng nhập tên đăng nhập.")
+            .min(8,"Tên đăng nhập phải trên 8 kí tự")
+            .max(100,"Tên đăng nhập phải dưới 100 kí tự"),
         password: Yup.string()
             .required("Vui lòng nhập mật khẩu.")
+            .min(8,"Tên đăng nhập phải trên 8 kí tự")
+            .max(100,"Tên đăng nhập phải dưới 100 kí tự")
     });
     const handleSubmitFormLogin = async (values,{setFieldError}) => {
         try {
@@ -36,8 +37,8 @@ function Login(props) {
             }
 
         } catch (e){
-                setDisableSubmit(false);
-            // setFieldError("password",e.data);
+            setDisableSubmit(false);
+            setFieldError("password",e.data);
         }
 
     }

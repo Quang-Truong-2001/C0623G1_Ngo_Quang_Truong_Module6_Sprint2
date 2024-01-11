@@ -4,6 +4,8 @@ import com.example.backend.config.JwtUtils;
 import com.example.backend.model.auth.JwtResponse;
 import com.example.backend.model.auth.Login;
 import com.example.backend.model.auth.MyUserDetail;
+import com.example.backend.model.auth.User;
+import com.example.backend.service.IUserService;
 import com.example.backend.service.auth.MyUserDetailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -36,15 +38,13 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private IUserService userService;
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody Login login, BindingResult bindingResult){
-        Map<String, String> errors=new HashMap<>();
         login.validate(login,bindingResult);
         if(bindingResult.hasErrors()){
-            for(FieldError error:bindingResult.getFieldErrors()){
-                errors.put(error.getField(),error.getDefaultMessage());
-            }
-            return new ResponseEntity<>(errors,HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Thông tin đăng nhập không chính xác.",HttpStatus.UNAUTHORIZED);
         }
 
         try {
@@ -68,6 +68,14 @@ public class AuthController {
         } catch (Exception e){
             return new ResponseEntity<>("Thông tin đăng nhập không chính xác.", HttpStatus.UNAUTHORIZED);
         }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getInfoUser(@PathVariable("id") Long id){
+        User user =userService.getInfoUser(id);
+        if(user==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
 }

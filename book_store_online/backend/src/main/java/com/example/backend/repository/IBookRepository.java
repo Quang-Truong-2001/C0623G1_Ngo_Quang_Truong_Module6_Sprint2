@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.IBookDto;
+import com.example.backend.dto.book.IBookDto;
 import com.example.backend.model.book.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

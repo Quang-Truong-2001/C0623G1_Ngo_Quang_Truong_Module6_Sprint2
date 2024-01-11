@@ -1,13 +1,25 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {toast} from "react-toastify";
+import {useDispatch, useSelector} from "react-redux";
+import store from "../../redux/Store";
+import {getAllCartById} from "../../redux/middlewares/CartMiddleware";
+import {getInfo} from "../../redux/middlewares/UserMiddleware";
+import Search from "./Search";
 
 function Header(props) {
+    const dispatch=useDispatch();
+    const carts=useSelector(store=>store.carts);
+    const info=useSelector(store=>store.infos);
     const user = JSON.parse(localStorage.getItem('user'));
     let isUser=false;
     if (!user || user.roles.includes("ROLE_ADMIN")){
         isUser=true;
     }
+    useEffect(()=>{
+        dispatch(getAllCartById())
+        dispatch(getInfo())
+    },[])
     return (
         <div className="position-fixed w-100 z-1 top-0">
             <nav className="navbar navbar-expand-lg shadow navbar-light p-0">
@@ -26,21 +38,12 @@ function Header(props) {
 
                     <div className="mx-auto my-3 d-lg-none d-sm-block d-xs-block">
                         <div className="input-group">
-                            <div className="input-group bg-white rounded-0">
-                                <input type="text" className="form-control rounded-start-2"/>
-                                <a role="button" className="btn-find rounded-end-2"><i
-                                    className="find bi bi-search mx-2 mt-1"></i></a>
-                            </div>
+                            <Search/>
                         </div>
                     </div>
                     <div className=" collapse navbar-collapse" id="navbarNavDropdown">
                         <div className="ms-auto d-none d-lg-block">
-                            <div className="input-group bg-white rounded-0">
-                                <input type="text" className="form-control rounded-start-2"
-                                       placeholder="Nhập tên sách cần tìm"/>
-                                <a role="button" className="btn-find rounded-end-2"><i
-                                    className="find bi bi-search mx-2 mt-1"></i></a>
-                            </div>
+                            <Search/>
                         </div>
                         <ul className="navbar-nav ms-auto ">
 
@@ -58,7 +61,7 @@ function Header(props) {
                             {isUser?null:
                                 <li className="nav-item me-5">
                                     <Link to="/cart" className="nav-link text-uppercase"><i
-                                        className="bi bi-cart"></i><div className="cart-number">4</div></Link>
+                                        className="bi bi-cart"></i>{carts.length>0?<div className="cart-number">{carts.length}</div>:null}</Link>
                                 </li>
                             }
 

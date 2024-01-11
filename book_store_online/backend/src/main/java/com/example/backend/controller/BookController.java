@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.BookDto;
-import com.example.backend.dto.IBookDto;
+import com.example.backend.dto.book.BookDto;
+import com.example.backend.dto.book.IBookDto;
 import com.example.backend.model.book.Book;
 import com.example.backend.service.IBookService;
 import org.springframework.beans.BeanUtils;

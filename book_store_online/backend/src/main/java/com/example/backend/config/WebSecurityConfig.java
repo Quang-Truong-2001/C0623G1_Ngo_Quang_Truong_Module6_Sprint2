@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests((requests)->requests
                         .requestMatchers("/**").permitAll()
-                        .requestMatchers("/**").hasAnyRole("ADMIN","USER")
+//                        .requestMatchers("/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
