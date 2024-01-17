@@ -2,17 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {Link, useSearchParams} from "react-router-dom";
 import * as bookService from "../../services/BookService"
 
-function ListSearch(props) {
+function BestSeller(props) {
     const [list, setList] = useState([]);
-    const [searchParams] = useSearchParams();
-    const [keyword,setKeyword] = useState(searchParams.get("keyword"));
-    console.log(keyword)
+    const [page,setPage]=useState(0);
+    const [totalPage,setTotalPage]=useState(0);
     const getAllBookBySearch=async ()=>{
-        let res=await bookService.getAllBookBySearch(keyword);
+        let res=await bookService.getAllBookBestSeller();
         if(res.status===200){
             setList(res.data.content);
+            setTotalPage(res.data.totalPages);
         } else {
             setList([]);
+            setTotalPage(0);
         }
 
 
@@ -22,7 +23,7 @@ function ListSearch(props) {
     },[]);
     return (
         <div className="list-book p-3">
-            <p className="fs-4 text-center">Danh sách tìm kiếm</p>
+            <p className="fs-4 text-center">Sách bán chạy nhất</p>
             <div className="row">
                 {list.map((item) => (
                     <div key={item.id} className="col-lg-3 col-md-4 col-sm-6 col-xl-3">
@@ -39,7 +40,7 @@ function ListSearch(props) {
                                     style: 'currency',
                                     currency: 'VND'
                                 })}</p>
-                                <Link to={`/detail/${item.id}`} className="btn btn-primary mb-3 rounded-2">Chi
+                                <Link to={`/detail/${item.id}`} className="btn btn-detail mb-3 rounded-2">Chi
                                     tiết</Link>
                             </div>
                         </div>
@@ -47,8 +48,19 @@ function ListSearch(props) {
                 ))}
 
             </div>
+            <div className="my-4">
+                <div className="d-flex justify-content-center">
+                    {page===0?null:
+                        <button className="btn-pagination" onClick={()=>setPage(page-1)}><i className="bi bi-arrow-left"></i></button>
+                    }
+                    <button className="btn-pagination mx-2">{page+1}</button>
+                    {page===(totalPage-1)?null:
+                        <button className="btn-pagination"  onClick={()=>setPage(page+1)}><i className="bi bi-arrow-right"></i></button>
+                    }
+                </div>
+            </div>
         </div>
     );
 }
 
-export default ListSearch;
+export default BestSeller;

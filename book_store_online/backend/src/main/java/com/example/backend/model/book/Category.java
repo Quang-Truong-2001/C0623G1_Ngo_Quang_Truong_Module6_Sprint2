@@ -1,4 +1,4 @@
-package com.example.backend.model.auth;
+package com.example.backend.model.book;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -6,15 +6,16 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @JsonBackReference
+    @OneToMany(mappedBy = "category")
+    private Set<Book> books;
 
-
-    public Role() {
+    public Category() {
     }
 
     public Long getId() {
@@ -33,4 +34,11 @@ public class Role {
         this.name = name;
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 }

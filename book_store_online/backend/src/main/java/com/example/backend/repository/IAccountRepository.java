@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface IAccountRepository extends JpaRepository<Account,Long> {
     @Query(value = "SELECT * FROM accounts as a WHERE a.username = :username", nativeQuery = true)
-    Optional<Account> findByUsername(@Param("username") String username);
+    Account findByUsername(@Param("username") String username);
 }

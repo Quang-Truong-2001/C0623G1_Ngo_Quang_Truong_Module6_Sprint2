@@ -25,8 +25,8 @@ public class MyUserDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorityList=new ArrayList<>();
-        for(AccountRole role:account.getAccountRoles()){
-            grantedAuthorityList.add(new SimpleGrantedAuthority(role.getRole().getName()));
+        for(Role role:account.getRoles()){
+            grantedAuthorityList.add(new SimpleGrantedAuthority(role.getName()));
         }
         return grantedAuthorityList;
     }

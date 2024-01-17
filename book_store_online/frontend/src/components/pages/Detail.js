@@ -4,8 +4,11 @@ import * as cartService from "../../services/CartService"
 import async from "async";
 import {useNavigate, useParams} from "react-router-dom";
 import {toast} from "react-toastify";
+import {useDispatch} from "react-redux";
+import {addCartMiddle} from "../../redux/middlewares/CartMiddleware";
 
 function Detail(props) {
+    const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
     const {id} = useParams();
@@ -29,10 +32,8 @@ function Detail(props) {
             } else {
                 cart = {quantity: 1, idAccount: user.id, idBook: id}
             }
-            let is = await cartService.createNewCart(cart);
-            if (is) {
-                navigate("/cart")
-            }
+            dispatch(addCartMiddle(cart));
+            navigate("/cart")
         }
     }
 
@@ -93,16 +94,16 @@ function Detail(props) {
                 </div>
             </div>
             <div className="detail col-lg-3 col-xl-3 col-sm-12 col-md-12">
-                <div className="buy card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
+                <div className="buy card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0 form-control">
                     <h6 className="mt-3 mx-4">Số lượng: </h6>
-                    <div className="d-flex mt-3 mx-4">
+                    <div className="d-flex justify-content-center mt-3 mx-4">
                         {amount > 1 ?
                             <button className="btn btn-outline-dark" onClick={() => {
                                 setAmount(amount - 1)
                             }}>-</button> :
-                            <button className="btn btn-outline-dark disabled">-</button>
+                            <button className="btn btn-outline-dark">-</button>
                         }
-                        <input type="number" style={{width: "fit-content"}} className="form-control mx-2"
+                        <input type="number" style={{width: "20%"}} className="mx-2 text-center form-control"
                                onChange={changeAmountInput} value={amount.toString()}/>
                         <button className="btn btn-outline-dark" onClick={() => {
                             setAmount(amount + 1)

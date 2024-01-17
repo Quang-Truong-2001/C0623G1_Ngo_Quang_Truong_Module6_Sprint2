@@ -1,18 +1,19 @@
 
 import axios from "axios";
 
-export const getAllBook=async ()=>{
+
+export const getAllBookBySearch=async (name,author,min,max,page,category)=>{
     try {
-        let res=await axios.get("http://localhost:8080/api/book");
+        let res=await axios.get(`http://localhost:8080/api/book/list?name=${name}&author=${author}&min=${min}&max=${max}&page=${page}&category=${category}`);
         return res;
     } catch (e){
         return undefined;
     }
 }
-export const getAllBookBySearch=async (name)=>{
+export const getAllBookBestSeller=async ()=>{
     try {
-        let res=await axios.get(`http://localhost:8080/api/book?name=${name}`);
-        return res;
+        let res=await axios.get("http://localhost:8080/api/book/best_seller");
+        return res
     } catch (e){
         return undefined;
     }

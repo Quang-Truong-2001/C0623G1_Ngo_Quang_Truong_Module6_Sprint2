@@ -11,7 +11,11 @@ import {ToastContainer} from "react-toastify";
 import ManagerStore from "./components/pages/ManagerStore";
 import 'react-toastify/dist/ReactToastify.css';
 import ModalLogout from "./components/common/ModalLogout";
-import ListSearch from "./components/pages/ListSearch";
+import BestSeller from "./components/pages/BestSeller";
+import Order from "./components/pages/Order";
+import OrderDetail from "./components/pages/OrderDetail";
+import {NotFound} from "./components/errors/NotFound";
+import SuccessPay from "./components/errors/SuccessPay";
 
 
 
@@ -24,9 +28,13 @@ function App() {
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/cart" element={<Cart/>}/>
+                    <Route path="/order" element={<Order/>}/>
                     <Route path="/detail/:id" element={<Detail/>}/>
+                    <Route path="/order_detail/:id" element={<OrderDetail/>}/>
                     <Route path="/manage" element={<ManagerStore/>}/>
-                    <Route path="/search" element={<ListSearch/>}/>
+                    <Route path="/best_seller" element={<BestSeller/>}/>
+                    <Route path="/success" element={<SuccessPay/>}/>
+                    <Route path="*" element={<NotFound/>}/>
                 </Routes>
                 <ModalLogout/>
             </div>

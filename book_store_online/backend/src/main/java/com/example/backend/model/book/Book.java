@@ -34,6 +34,9 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonBackReference
     private Set<Cart> cart;
+    @ManyToOne
+    @JoinColumn(name = "category_id",referencedColumnName = "id")
+    private Category category;
 
 
     public Book() {
@@ -133,5 +136,13 @@ public class Book {
 
     public void setSalePrice(Double salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

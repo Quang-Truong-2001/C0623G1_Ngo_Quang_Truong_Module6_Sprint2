@@ -16,7 +16,7 @@ public class MyUserDetailService implements UserDetailsService {
     private IAccountRepository accountRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account=accountRepository.findByUsername(username).get();
+        Account account=accountRepository.findByUsername(username);
         return new MyUserDetail(account);
     }
 }

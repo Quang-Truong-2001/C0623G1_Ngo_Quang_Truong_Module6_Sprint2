@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface IAccountService {
     Account findAccountById(Long id);
-    Optional<Account> findByUsername(String username);
+    Account findByUsername(String username);
 
 }

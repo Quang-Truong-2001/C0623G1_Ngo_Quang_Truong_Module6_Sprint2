@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Yup from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {toast} from "react-toastify";
 import {loginUser} from "../../redux/middlewares/AuthMiddleware";
 import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 
 function Login(props) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const navigate=useNavigate();
+
     const [disableSubmit, setDisableSubmit] = useState(false);
     const dispatch = useDispatch();
     const initValues={
@@ -29,19 +33,19 @@ function Login(props) {
             setDisableSubmit(true);
             await dispatch(loginUser(values));
             toast.success("Đăng nhập thành công !");
-            const user = JSON.parse(localStorage.getItem('user'));
-            if(user.roles.includes("ROLE_ADMIN")){
-                window.location.href = '/manage';
-            } else {
-                window.location.href = '/';
-            }
-
+            window.location.href = '/';
         } catch (e){
             setDisableSubmit(false);
             setFieldError("password",e.data);
         }
 
     }
+    useEffect(()=>{
+        if(user){
+            navigate("/");
+        }
+    },[])
+
     return (
         <div className="login gradient-form my-5">
             <div className="container p-2">

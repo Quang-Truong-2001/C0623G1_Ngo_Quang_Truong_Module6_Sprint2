@@ -20,55 +20,65 @@ public class BookController {
     @Autowired
     private IBookService bookService;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<?> showList(
-            @RequestParam(value = "page",defaultValue = "0", required = false) Integer page,
-            @RequestParam(value = "name",defaultValue = "", required = false) String name,
-            @RequestParam(value = "author",defaultValue = "", required = false) String author,
-            @RequestParam(value = "min",defaultValue = "0", required = false) String minPrice,
-            @RequestParam(value = "max",defaultValue = "10000000000", required = false) String maxPrice
-    ){
-        Pageable pageable = PageRequest.of(page, 5);
-        Page<IBookDto> list=bookService.showList(pageable,name,author,minPrice,maxPrice);
-        if(list.isEmpty()){
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "name", defaultValue = "", required = false) String name,
+            @RequestParam(value = "author", defaultValue = "", required = false) String author,
+            @RequestParam(value = "min", defaultValue = "0", required = false) String minPrice,
+            @RequestParam(value = "max", defaultValue = "10000000000", required = false) String maxPrice,
+            @RequestParam(value = "category", defaultValue = "", required = false) String category
+    ) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<IBookDto> list = bookService.showList(pageable, name, author, minPrice, maxPrice, category);
+        if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id){
-        Book book=bookService.findBookById(id);
-        if(book==null){
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        Book book = bookService.findBookById(id);
+        if (book == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> findBookById(@PathVariable("id") Long id){
-        Book book=bookService.findBookById(id);
-        if (book==null){
+    public ResponseEntity<?> findBookById(@PathVariable("id") Long id) {
+        Book book = bookService.findBookById(id);
+        if (book == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(book,HttpStatus.OK);
+        return new ResponseEntity<>(book, HttpStatus.OK);
     }
+
     @PostMapping("/create")
-    public ResponseEntity<?> createBook(@RequestBody BookDto bookDto){
-        Book book=new Book();
-        BeanUtils.copyProperties(bookDto,book);
+    public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
+        Book book = new Book();
+        BeanUtils.copyProperties(bookDto, book);
         book.setAuthor(bookService.findAuthorById(bookDto.getIdAuthor()));
         book.setDelete(false);
         bookService.createBook(book);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PatchMapping("/update")
-    public ResponseEntity<?> updateBook(@RequestBody BookDto bookDto){
-        Book book=new Book();
-        BeanUtils.copyProperties(bookDto,book);
+    public ResponseEntity<?> updateBook(@RequestBody BookDto bookDto) {
+        Book book = new Book();
+        BeanUtils.copyProperties(bookDto, book);
         book.setAuthor(bookService.findAuthorById(bookDto.getIdAuthor()));
         bookService.updateBook(book);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/best_seller")
+    public ResponseEntity<?> showListBookBestSeller(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        return new ResponseEntity<>(bookService.showListBestSell(pageable), HttpStatus.OK);
     }
 
 

@@ -2,21 +2,21 @@ import React from 'react';
 
 function Carousel(props) {
     return (
-        <div className="carousel-manual d-flex justify-content-center pb-5 z-0">
+        <div className="carouse-manu d-flex justify-content-center pb-5 z-0">
             <div id="carouselExampleInterval" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
                     <div className="carousel-item active" data-bs-interval="5000">
                         <img
-                            src="https://image.nhandan.vn/1200x630/Uploaded/2023/tpuoaob/2023_04_14/doc-sach-9398.png.webp"
+                            src="https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/sach-hay-21.jpg"
                             className="d-block w-100" alt="..."/>
                     </div>
                     <div className="carousel-item" data-bs-interval="5000">
                         <img
-                            src="https://curnonwatch.com/blog/wp-content/uploads/2022/07/Sach-hay-ve-cuoc-song-ban-chi-can-song-tot-troi-xanh-tu-an-bai.jpg"
+                            src="https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/sach-hay-11.jpg"
                             className="d-block w-100" alt="..."/>
                     </div>
                     <div className="carousel-item">
-                        <img src="https://cungdocsach.vn/wp-content/uploads/2022/02/Sach-song-tich-cuc-hon.jpg"
+                        <img src="https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/sach-hay-12.jpg"
                              className="d-block w-100" alt="..."/>
                     </div>
                 </div>

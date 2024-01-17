@@ -18,7 +18,7 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public Optional<Account> findByUsername(String username) {
+    public Account findByUsername(String username) {
         return repository.findByUsername(username);
     }
 }

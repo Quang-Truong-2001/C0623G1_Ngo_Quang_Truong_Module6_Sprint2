@@ -1,97 +1,113 @@
 import React, {useEffect, useState} from 'react';
-import * as cartService from "../../services/CartService"
 import {toast} from "react-toastify";
 import AccessDenied from "../errors/AccessDenied";
-import async from "async";
 import {useDispatch, useSelector} from "react-redux";
-import store from "../../redux/Store";
-import {getAllCartById} from "../../redux/middlewares/CartMiddleware";
-import {getInfo} from "../../redux/middlewares/UserMiddleware";
+import {getAllCartById, deleteCartMiddle, changeQuantity} from "../../redux/middlewares/CartMiddleware";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+import * as paymentService from "../../services/PayServices"
+import * as cartService from "../../services/CartService"
+import * as authService from "../../services/AuthService"
+
+
 function Cart(props) {
+
     const user = JSON.parse(localStorage.getItem('user'));
-    const carts=useSelector(store=>store.carts);
-    const info=useSelector(store=>store.infos);
-    const dispatch=useDispatch();
-    const [checked,setChecked]=useState([]);
-    const [address,setAddress]=useState(info.address);
-    const [phone,setPhone]=useState(info.phone);
-    const [deleteBook,setDeleteBook]=useState({
-        "book":{
-            "name":"hello"
+    const carts = useSelector(store => store.carts);
+    const [info, setInfo] = useState({})
+    const dispatch = useDispatch();
+    const [checked, setChecked] = useState([]);
+    const [totalMoney, setTotalMoney] = useState(0);
+    const [flag, setFlag] = useState(true);
+
+
+    const [deleteBook, setDeleteBook] = useState({
+        "book": {
+            "name": "hello"
         }
     });
 
-    const calculationMoney=()=>{
-        let result=0;
-        for(let i=0;i<checked.length;i++){
-            result= result + checked[i].quantity*checked[i].salePrice;
-        }
-        return result.toLocaleString('vi', {
-            style: 'currency',
-            currency: 'VND'
-        });
-    }
-    const deleteCartById = async () => {
-        await cartService.deleteCartById(deleteBook.id);
-        toast.success("Xóa thành công");
-        setChecked([])
-        dispatch(getAllCartById());
-
-    }
-    const increaseAmount=async (item)=>{
-        let is=await cartService.updateCartById(item.id,item.quantity*1+1);
-        if(is){
-            setChecked([])
-            dispatch(getAllCartById())
-        }
-    }
-    const decreaseAmount=async (item)=>{
-        let is=await cartService.updateCartById(item.id,item.quantity*1-1);
-        if(is){
-            setChecked([])
-            dispatch(getAllCartById())
-        }
-    }
-    const changeAmountInput =async (item,e) => {
-        let amount=e.target.value*1;
-        if(amount<1){
-            amount = 1;
-        }
-        let is=await cartService.updateCartById(item.id,amount);
-        if(is){
-            setChecked([])
-            dispatch(getAllCartById())
-        }
-    }
-    const handleCheck=(value)=>{
-        setChecked(pre=>{
-            const isCheck=checked.includes(value);
-            if(isCheck){
-                return checked.filter(item=>item.id !== value.id)
+    const validateObject = Yup.object({
+            address: Yup.string().required("Vui lòng nhập địa chỉ"),
+            phone: Yup.string().required("Vui lòng nhập số điện thoại ").matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/,"Số điện thoại không hợp lệ"),        }
+    )
+    const handleCheck = (id) => {
+        setChecked(pre => {
+            const isCheck = checked.includes(id);
+            if (isCheck) {
+                return checked.filter(item => item !== id)
             } else {
-                return [...pre,value]
+                return [...pre, id]
             }
         })
     }
-    const changeAddress=(e)=>{
-        setAddress(e.target.value);
+    const getInfo=async ()=>{
+        let res=await authService.getInfo(user.id);
+        setInfo(res);
     }
-    const changePhone=(e)=>{
-        setPhone(e.target.value);
+    const initValue = {
+        address: info.address,
+        phone: info.phone
+    }
+    const calculationMoney = async () => {
+        let res = await cartService.calculate({list: checked});
+        setTotalMoney(res);
+    }
+    const deleteCartById = () => {
+        dispatch(deleteCartMiddle(deleteBook.id));
+        toast.success("Xóa thành công");
+        setChecked([])
+    }
+    const increaseAmount = (item) => {
+        if (item.book.quantity > item.quantity && item.quantity > 0) {
+            dispatch(changeQuantity(item.id, item.quantity * 1 + 1));
+        } else {
+            dispatch(changeQuantity(item.id, item.book.quantity));
+        }
+        setChecked([])
+    }
+    const decreaseAmount = (item) => {
+        if (item.book.quantity >= item.quantity && item.quantity > 1) {
+            dispatch(changeQuantity(item.id, item.quantity - 1));
+        }
+        setChecked([])
+    }
+    const changeAmountInput = (item, e) => {
+        if (item.book.quantity >= e.target.value && e.target.value > 0) {
+            dispatch(changeQuantity(item.id, e.target.value * 1));
+        } else if (item.book.quantity < e.target.value) {
+            dispatch(changeQuantity(item.id, item.book.quantity));
+        } else {
+            dispatch(changeQuantity(item.id, 1));
+        }
+        setChecked([])
     }
 
+    const createOrder = async (value) => {
+        if (checked.length > 0) {
+            const order = {idAccount: user.id, address: value.address, phone: value.phone, list: checked}
+            localStorage.setItem('order', JSON.stringify(order));
+            let url = await paymentService.payment(totalMoney);
+            window.location.href = url;
+        } else {
+            toast.warning("Bạn chưa chọn sản phẩm cần mua");
+        }
+    }
+    useEffect(() => {
+        calculationMoney();
+    }, [checked, flag])
     useEffect(()=>{
-        dispatch(getAllCartById());
-        dispatch(getInfo());
+       getInfo();
     },[])
-    if(!user){
+    if (!user) {
         return <AccessDenied/>
     }
-
-
+    if(info.id==null){
+        return null;
+    }
     return (
         <div className="cart">
-            {carts.length>0?
+            {carts.length > 0 ?
                 <div className="row mx-0 mb-3">
                     <div className="detail col-lg-9 col-xl-9 col-sm-12 col-md-12">
                         <div className="card text-center">
@@ -111,8 +127,8 @@ function Cart(props) {
                                 {carts.map((item) => (
                                     <tr key={item.id}>
                                         <td scope="row">
-                                            <input type="checkbox" onChange={()=>handleCheck(item)}
-                                            checked={checked.includes(item)}
+                                            <input type="checkbox" onChange={() => handleCheck(item.id)}
+                                                   checked={checked.includes(item.id)}
                                             />
                                         </td>
                                         <td>
@@ -126,17 +142,21 @@ function Cart(props) {
                                         })}</td>
                                         <td>
                                             <div className="d-flex justify-content-center mt-3 mx-4">
-                                                {item.quantity===1?
-                                                    <button className="btn btn-outline-dark">-</button>:
-                                                    <button className="btn btn-outline-dark" onClick={()=>decreaseAmount(item)}>-</button>
-                                                }
-                                                <input type="number" style={{width: "60px"}} className="form-control mx-2"
-                                                       onChange={(e)=>changeAmountInput(item,e)}  value={item.quantity.toString()}/>
-                                                <button className="btn btn-outline-dark" onClick={()=>increaseAmount(item)}>+
+
+                                                <button className="btn btn-outline-dark"
+                                                        onClick={() => decreaseAmount(item)}>-
                                                 </button>
+                                                <input type="number" style={{width: "60px"}}
+                                                       className="text-center form-control mx-2"
+                                                       onChange={(e) => changeAmountInput(item, e)}
+                                                       value={item.quantity}/>
+                                                <button className="btn btn-outline-dark"
+                                                        onClick={() => increaseAmount(item)}>+
+                                                </button>
+
                                             </div>
                                         </td>
-                                        <td>{(item.book.salePrice*item.quantity).toLocaleString('vi', {
+                                        <td>{(item.book.salePrice * item.quantity).toLocaleString('vi', {
                                             style: 'currency',
                                             currency: 'VND'
                                         })}</td>
@@ -155,29 +175,43 @@ function Cart(props) {
                         </div>
                     </div>
                     <div className="detail col-lg-3 col-xl-3 col-sm-12 col-md-12">
-                        <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
-                            <div className="m-3">
-                                <p className="mb-2">Giao tới </p>
-                                <textarea className="form-control" id="w3review" name="w3review" rows="4" cols="50"
-                                          value={address} onChange={changeAddress}></textarea>
-                            </div>
-                        </div>
-                        <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
-                            <div className="m-3">
-                                <p className="mb-2">Số điện thoại </p>
-                                <input type="text" className="form-control" onChange={changePhone} value={phone}/>
-                            </div>
-                        </div>
-                        <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
-                            <div className="mt-3 mx-3 d-flex justify-content-between">
-                                <p>Tổng tiền </p>
-                                <h5>{calculationMoney()}</h5>
-                            </div>
-                            <button className="my-3 mx-4 btn btn-danger">Mua ngay</button>
-                        </div>
+                        <Formik initialValues={initValue} onSubmit={values => {
+                            createOrder(values)
+                        }} validationSchema={validateObject}>
+                            <Form>
+                                <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
+                                    <div className="m-3">
+                                        <p className="mb-2">Giao tới </p>
+                                        <Field className="form-control" type="text" id="w3review" name="address"
+                                               rows="4" cols="50"/>
+                                        <ErrorMessage name="address" className="text-danger"
+                                                      component="small"/>
+                                    </div>
+                                </div>
+                                <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
+                                    <div className="m-3">
+                                        <p className="mb-2">Số điện thoại </p>
+                                        <Field type="text" name="phone" className="form-control"/>
+                                        <ErrorMessage name="phone" className="text-danger"
+                                                      component="small"/>
+                                    </div>
+                                </div>
+                                <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
+                                    <div className="mt-3 mx-3 d-flex justify-content-between">
+                                        <p>Tổng tiền </p>
+                                        <h5>{totalMoney.toLocaleString('vi', {
+                                            style: 'currency',
+                                            currency: 'VND'
+                                        })}</h5>
+                                    </div>
+                                    <button type="submit" className="my-3 mx-4 btn btn-danger">Mua ngay</button>
+                                </div>
+                            </Form>
+                        </Formik>
+
                     </div>
                 </div>
-                :<div><h6 className="text-center">Bạn chưa có đơn hàng nào!</h6></div>
+                : <div><h6 className="text-center">Bạn chưa có đơn hàng nào!</h6></div>
             }
             <div>
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel"
@@ -190,7 +224,8 @@ function Cart(props) {
                                         aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                Bạn có chắc chắn muốn xóa <span className="text-primary">{deleteBook.book.name}</span> ra
+                                Bạn có chắc chắn muốn xóa <span
+                                className="text-primary">{deleteBook.book.name}</span> ra
                                 khỏi giỏ hàng không?
                             </div>
                             <div className="modal-footer">

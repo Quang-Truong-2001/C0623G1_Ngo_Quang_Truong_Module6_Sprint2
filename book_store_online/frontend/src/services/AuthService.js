@@ -10,7 +10,7 @@ export const login =async (account)=>{
 }
 export const getInfo =async (id)=>{
     try {
-        let res = await axios.get(`http://localhost:8080/api/auth/${id}`);
+        let res = await axios.get(`http://localhost:8080/api/auth/${id}`,{ headers: authHeader() });
         return res.data;
     } catch (e){
         return undefined;
@@ -18,7 +18,6 @@ export const getInfo =async (id)=>{
 }
 export default function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'));
-
     if (user && user.accessToken) {
         return {
             "Authorization": 'Bearer ' + user.accessToken,

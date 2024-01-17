@@ -5,6 +5,7 @@ import com.example.backend.model.cart.Cart;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,9 +16,12 @@ public class Account {
     private Long id;
     private String username;
     private String password;
-    @JsonBackReference
-    @OneToMany(mappedBy = "account")
-    private Set<AccountRole> accountRoles;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "account_roles",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "account")
     private User user;
@@ -57,14 +61,6 @@ public class Account {
         this.password = password;
     }
 
-    public Set<AccountRole> getAccountRoles() {
-        return accountRoles;
-    }
-
-    public void setAccountRoles(Set<AccountRole> accountRoles) {
-        this.accountRoles = accountRoles;
-    }
-
     public User getUser() {
         return user;
     }
@@ -87,5 +83,13 @@ public class Account {
 
     public Set<Cart> getCarts() {
         return carts;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

@@ -48,8 +48,19 @@ public class WebSecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeRequests((requests)->requests
-                        .requestMatchers("/**").permitAll()
-//                        .requestMatchers("/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/book/list",
+                                "/api/book/best_seller",
+                                "/api/category/**",
+                                "/api/book/{id}"
+                                ).permitAll()
+                        .requestMatchers(
+                                "/api/auth/{id}",
+                                "/api/cart/**",
+                                "/api/order/**",
+                                "/api/payment"
+                        ).hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

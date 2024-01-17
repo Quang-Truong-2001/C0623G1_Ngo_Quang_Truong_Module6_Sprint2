@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -13,10 +14,13 @@ public class OrderBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String code;
     @Column(columnDefinition = "DATETIME")
-    private Date dateBuy;
+    private LocalDateTime dateBuy;
     private String address;
     private String phone;
+    private Double totalMoney;
+
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
@@ -26,13 +30,27 @@ public class OrderBook {
     public OrderBook() {
     }
 
+    public LocalDateTime getDateBuy() {
+        return dateBuy;
+    }
+
+    public void setDateBuy(LocalDateTime dateBuy) {
+        this.dateBuy = dateBuy;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setDateBuy(Date dateBuy) {
-        this.dateBuy = dateBuy;
+    public String getCode() {
+        return code;
     }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+
 
     public void setAccount(Account account) {
         this.account = account;
@@ -42,9 +60,6 @@ public class OrderBook {
         return id;
     }
 
-    public Date getDateBuy() {
-        return dateBuy;
-    }
 
     public Account getAccount() {
         return account;
@@ -72,5 +87,13 @@ public class OrderBook {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

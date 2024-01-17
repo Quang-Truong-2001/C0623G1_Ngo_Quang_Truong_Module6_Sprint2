@@ -7,5 +7,5 @@ import {userReducer} from "./UserReducers";
 export const rootReducer=combineReducers({
     users: authReducer,
     carts: cartReducer,
-    infos: userReducer
+    infos: userReducer,
 })

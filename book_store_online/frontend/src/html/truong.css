@@ -45,8 +45,24 @@ nav{
 }
 nav .logo{
     width: 115px;
-    position: relative;
-    top: -20px;
+}
+@media(min-width: 767px){
+    nav .logo{
+        width: 115px;
+        position: absolute;
+        top: -10px;
+    }
+
+}
+@media(max-width: 767px){
+    nav .logo{
+        width: 115px;
+
+    }
+
+}
+nav .name-user{
+    margin-top: 5px;
 }
 nav input, nav a{
     height: 44px;
@@ -84,7 +100,7 @@ nav input, nav a{
     font-size: 16px;
 }
 .carousel-item img{
-    height: 800px;
+    height: 600px;
     object-fit: contain;
 }
 .footer i{
@@ -92,7 +108,6 @@ nav input, nav a{
 }
 .content .cart img{
     height: 100px;
-
 }
 .content .cart{
     min-height: 365px;
@@ -128,3 +143,48 @@ input[type=number]::-webkit-outer-spin-button {
     top: -40px;
     right: -10px;
 }
+.content .list-book label{
+    font-size: 14px;
+}
+.content .list-book .big-input{
+    height: 30px;
+}
+.content .list-book .small-input{
+    height: 30px;
+    width: 20%;
+}
+.content .list-book .border-search{
+    border-width: 4px;
+    border-style: solid;
+    border-color: darkcyan;
+}
+.content .list-book .price-input input{
+    height: 30px;
+    width: 80px;
+}
+.content .search-area {
+}
+.content .search-sidebar{
+}
+.content .list-book .btn-pagination{
+    background-color: darkcyan;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-weight: bolder;
+    font-size: 17px;
+}
+.content .list-book .btn-detail{
+    background-color: darkcyan;
+    color: white;
+    font-size: 16px;
+}
+.content .list-book .slider{
+    color: darkcyan;
+}
+.content .order-detail img{
+    height: 100px;
+}
+
