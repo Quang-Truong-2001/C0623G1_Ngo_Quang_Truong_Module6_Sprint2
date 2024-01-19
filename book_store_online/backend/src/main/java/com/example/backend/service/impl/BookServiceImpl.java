@@ -66,7 +66,10 @@ public class BookServiceImpl implements IBookService {
         return repository.showListBestSell(pageable);
     }
 
-
+    @Override
+    public Page<IBookDto> showListDiscountBook(Pageable pageable) {
+        return repository.showListDiscountBook(pageable);
+    }
 
 
 }

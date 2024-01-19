@@ -29,9 +29,16 @@ public interface IBookRepository extends JpaRepository<Book, Integer> {
             "from books as b\n" +
             "join authors as a\n" +
             "on b.author_id=a.id\n" +
-            "join carts as c\n" +
-            "on b.id=c.book_id\n" +
-            "group by c.book_id\n" +
-            "order by sum(c.quantity) desc",nativeQuery = true)
+            "join order_details as o\n" +
+            "on b.id=o.book_id\n" +
+            "group by o.book_id\n" +
+            "order by sum(o.quantity) desc",nativeQuery = true)
     Page<IBookDto> showListBestSell(Pageable pageable);
+    @Query(value = "select b.id as id, b.name as name,b.image as image, b.intro as intro, b.content as content, b.quantity as quantity, b.price as price, a.name as nameAuthor, b.sale_price as salePrice\n" +
+            "from books as b\n" +
+            "join authors as a\n" +
+            "on b.author_id=a.id\n" +
+            "group by b.id\n" +
+            "order by sum(b.price-b.sale_price) desc",nativeQuery = true)
+    Page<IBookDto> showListDiscountBook(Pageable pageable);
 }

@@ -20,6 +20,8 @@ public interface IBookService {
     void updateBook(Book book);
 
     Page<IBookDto> showListBestSell(Pageable pageable);
+    Page<IBookDto> showListDiscountBook(Pageable pageable);
+
 
 
 

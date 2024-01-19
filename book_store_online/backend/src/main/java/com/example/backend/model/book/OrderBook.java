@@ -18,6 +18,7 @@ public class OrderBook {
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime dateBuy;
     private String address;
+    @Column(columnDefinition = "varchar(10)")
     private String phone;
     private Double totalMoney;
 

@@ -16,6 +16,7 @@ import Order from "./components/pages/Order";
 import OrderDetail from "./components/pages/OrderDetail";
 import {NotFound} from "./components/errors/NotFound";
 import SuccessPay from "./components/errors/SuccessPay";
+import Discount from "./components/pages/Discount";
 
 
 
@@ -23,22 +24,22 @@ function App() {
     return (
         <>
             <Header/>
-            <div className="content" style={{minHeight: "58vh"}}>
+            <div className="content">
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/cart" element={<Cart/>}/>
                     <Route path="/order" element={<Order/>}/>
                     <Route path="/detail/:id" element={<Detail/>}/>
-                    <Route path="/order_detail/:id" element={<OrderDetail/>}/>
                     <Route path="/manage" element={<ManagerStore/>}/>
                     <Route path="/best_seller" element={<BestSeller/>}/>
+                    <Route path="/discount" element={<Discount/>}/>
                     <Route path="/success" element={<SuccessPay/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
-                <ModalLogout/>
             </div>
             <Footer/>
+            <ModalLogout/>
             <ToastContainer/>
         </>
 

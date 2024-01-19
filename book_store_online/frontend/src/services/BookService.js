@@ -10,9 +10,18 @@ export const getAllBookBySearch=async (name,author,min,max,page,category)=>{
         return undefined;
     }
 }
-export const getAllBookBestSeller=async ()=>{
+export const getAllBookBestSeller=async (page)=>{
     try {
-        let res=await axios.get("http://localhost:8080/api/book/best_seller");
+        let res=await axios.get(`http://localhost:8080/api/book/best_seller?page=${page}`);
+        return res
+    } catch (e){
+        return undefined;
+    }
+}
+
+export const getAllBookDiscountSeller=async (page)=>{
+    try {
+        let res=await axios.get(`http://localhost:8080/api/book/discount?page=${page}`);
         return res
     } catch (e){
         return undefined;

@@ -19,7 +19,26 @@ function Detail(props) {
         setBook(res);
     }
     const changeAmountInput = (e) => {
-        setAmount(e.target.value * 1);
+        if(e.target.value * 1<=0){
+            setAmount(1);
+            return;
+        }
+        if (e.target.value * 1<=book.quantity && amount>0) {
+            setAmount(e.target.value * 1);
+        } else {
+            setAmount(book.quantity);
+            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
+        }
+    }
+    const increase=()=>{
+        if (amount<book.quantity){
+            setAmount(amount+1);
+        } else {
+            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
+        }
+    }
+    const descrease=()=>{
+        setAmount(amount-1);
     }
     const createCart = async () => {
         if (!user) {
@@ -77,7 +96,7 @@ function Detail(props) {
                     </div>
                 </div>
                 <div className="card rounded-3">
-                    <div className="ms-2 description">
+                    <div className="px-3 pb-3 description">
                         <div className="d-flex align-items-center mt-2">
                             <h6 className="ms-1">Mô tả sản phẩm</h6>
                         </div>
@@ -95,29 +114,25 @@ function Detail(props) {
             </div>
             <div className="detail col-lg-3 col-xl-3 col-sm-12 col-md-12">
                 <div className="buy card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0 form-control">
-                    <h6 className="mt-3 mx-4">Số lượng: </h6>
+                    <h6 className="mt-3 mx-4">Số lượng còn lại:<span style={{fontSize:"18px",color: "red"}}> {book.quantity} </span> cuốn</h6>
                     <div className="d-flex justify-content-center mt-3 mx-4">
                         {amount > 1 ?
-                            <button className="btn btn-outline-dark" onClick={() => {
-                                setAmount(amount - 1)
-                            }}>-</button> :
+                            <button className="btn btn-outline-dark" onClick={descrease}>-</button> :
                             <button className="btn btn-outline-dark">-</button>
                         }
                         <input type="number" style={{width: "20%"}} className="mx-2 text-center form-control"
                                onChange={changeAmountInput} value={amount.toString()}/>
-                        <button className="btn btn-outline-dark" onClick={() => {
-                            setAmount(amount + 1)
-                        }}>+
+                        <button className="btn btn-outline-dark" onClick={increase}>+
                         </button>
                     </div>
-                    <button className="mt-3 mx-4 btn btn-buy">Mua ngay</button>
+                    {/*<button className="mt-3 mx-4 btn btn-buy">Mua ngay</button>*/}
                     <button className="mt-3 mx-4 btn btn-outline-primary" onClick={createCart}>Thêm vào giỏ hàng
                     </button>
-                    <h6 className="mt-3 mx-4">Tạm tính: </h6>
-                    <h5 className="mt-1 mx-4">{(amount * (book.salePrice)).toLocaleString('vi', {
+                    <h6 className="mt-4 mx-4">Tạm tính: <span style={{fontSize:"18px",color: "red"}}>{(amount * (book.salePrice)).toLocaleString('vi', {
                         style: 'currency',
                         currency: 'VND'
-                    })} </h5>
+                    })}</span> </h6>
+                    <h5 className="mt-1 mx-4"></h5>
                 </div>
             </div>
         </div>

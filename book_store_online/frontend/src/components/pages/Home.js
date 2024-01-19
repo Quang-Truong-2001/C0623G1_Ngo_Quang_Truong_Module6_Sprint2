@@ -16,6 +16,7 @@ function Home(props) {
     const [totalPage,setTotalPage]=useState(0);
     const [listCategory,setListCategory]=useState([]);
     const [category,setCategory]=useState("");
+    const [is,setIs]=useState(false);
     const handleChange = (e, newValue) => {
         setValue(newValue);
         setMin(e.target.value[0]);
@@ -90,10 +91,9 @@ function Home(props) {
         <>
             <div className="list-book row m-0">
                 <Carousel/>
-                <div className="search-area pe-5 col-2">
-                    <div
-                        className="position-absolute d-flex justify-content-start align-content-center bg-white rounded-2 ms-2 mt-2 shadow border-search">
-                        <div className="">
+                <div className="search-area col-xl-2 col-md-12 col-xxl-2 col-sm-12 col-lg-2 mb-5">
+                    <div className="bg-white rounded-2 ms-2 mt-2 shadow border-search">
+                        <div className="p-2">
                             <div className="mx-2 my-4">
                                 <label className="ms-1 mb-1">Tên sách: </label>
                                 <input className="big-input form-control" value={name} onChange={handleChangeName}/>
@@ -114,8 +114,8 @@ function Home(props) {
 
                             <div className="mx-2 my-4">
                                 <label className="ms-1 mt-2 mb-1">Mức giá: (nghìn đồng) </label>
-                                <div className="d-flex justify-content-center price-input">
-                                    <input className="form-control me-5" value={min} onChange={handleChangeMin}  type="number"/>
+                                <div className="d-flex justify-content-around price-input">
+                                    <input className="form-control" value={min} onChange={handleChangeMin}  type="number"/>
                                     <input className="form-control" value={max} onChange={handleChangeMax} type="number"/>
                                 </div>
                                 <div className="d-flex justify-content-center">
@@ -131,13 +131,13 @@ function Home(props) {
                                     />
                                 </div>
                             </div>
-                            <div className="mx-2 my-4">
-                                <button onClick={resetValue} className="btn btn-detail w-100">Đặt lại</button>
-                            </div>
+                            {/*<div className="mx-2 my-4">*/}
+                            {/*    <button onClick={resetValue} className="btn btn-detail w-100">Đặt lại</button>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                 </div>
-                <div className="col-10">
+                <div className="col-xl-10 col-md-12 col-xxl-10 col-sm-12 col-lg-10">
                     {list.length===0?
 
                         <div className="d-flex justify-content-center align-content-center" style={{height:"500px"}}>
@@ -150,7 +150,7 @@ function Home(props) {
                         <>
                             <div className="row">
                                 {list.map((item) => (
-                                    <div key={item.id} className="col-lg-3 col-md-4 col-sm-6 col-xl-3">
+                                    <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-xl-3">
                                         <div className="card shadow m-2 text-center rounded-2">
                                             <img className="rounded-2 mt-3"
                                                  src={item.image}

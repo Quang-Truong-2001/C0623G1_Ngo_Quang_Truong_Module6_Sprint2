@@ -8,10 +8,10 @@ import * as Yup from "yup";
 import * as paymentService from "../../services/PayServices"
 import * as cartService from "../../services/CartService"
 import * as authService from "../../services/AuthService"
+import {Link} from "react-router-dom";
 
 
 function Cart(props) {
-
     const user = JSON.parse(localStorage.getItem('user'));
     const carts = useSelector(store => store.carts);
     const [info, setInfo] = useState({})
@@ -41,6 +41,18 @@ function Cart(props) {
             }
         })
     }
+    const handleCheckAll=()=>{
+        let is=[];
+        if (checked.length<carts.length){
+            for(let i=0;i<carts.length;i++){
+                is=[...is,carts[i].id];
+            }
+            setChecked(is);
+        } else {
+            setChecked(is);
+        }
+
+    }
     const getInfo=async ()=>{
         let res=await authService.getInfo(user.id);
         setInfo(res);
@@ -49,45 +61,57 @@ function Cart(props) {
         address: info.address,
         phone: info.phone
     }
-    const calculationMoney = async () => {
-        let res = await cartService.calculate({list: checked});
-        setTotalMoney(res);
+    const calculationMoney = () => {
+        let res=0;
+        for (let i=0;i<carts.length;i++){
+            if(checked.includes(carts[i].id)){
+                res=res+carts[i].quantity*carts[i].salePrice
+            }
+        }
+        return res;
     }
     const deleteCartById = () => {
         dispatch(deleteCartMiddle(deleteBook.id));
         toast.success("Xóa thành công");
-        setChecked([])
+        setFlag(!flag);
+
     }
     const increaseAmount = (item) => {
         if (item.book.quantity > item.quantity && item.quantity > 0) {
             dispatch(changeQuantity(item.id, item.quantity * 1 + 1));
         } else {
+            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
             dispatch(changeQuantity(item.id, item.book.quantity));
         }
-        setChecked([])
+        setFlag(!flag);
     }
     const decreaseAmount = (item) => {
         if (item.book.quantity >= item.quantity && item.quantity > 1) {
             dispatch(changeQuantity(item.id, item.quantity - 1));
         }
-        setChecked([])
+        setFlag(!flag);
     }
     const changeAmountInput = (item, e) => {
         if (item.book.quantity >= e.target.value && e.target.value > 0) {
             dispatch(changeQuantity(item.id, e.target.value * 1));
         } else if (item.book.quantity < e.target.value) {
+            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
             dispatch(changeQuantity(item.id, item.book.quantity));
         } else {
             dispatch(changeQuantity(item.id, 1));
         }
-        setChecked([])
+        setFlag(!flag);
     }
 
     const createOrder = async (value) => {
+        let order = JSON.parse(localStorage.getItem('order'));
+        if(order){
+            localStorage.removeItem('order');
+        }
         if (checked.length > 0) {
-            const order = {idAccount: user.id, address: value.address, phone: value.phone, list: checked}
+            order = {idAccount: user.id, address: value.address, phone: value.phone, list: checked}
             localStorage.setItem('order', JSON.stringify(order));
-            let url = await paymentService.payment(totalMoney);
+            let url = await paymentService.payment(calculationMoney()*1);
             window.location.href = url;
         } else {
             toast.warning("Bạn chưa chọn sản phẩm cần mua");
@@ -111,11 +135,10 @@ function Cart(props) {
                 <div className="row mx-0 mb-3">
                     <div className="detail col-lg-9 col-xl-9 col-sm-12 col-md-12">
                         <div className="card text-center">
-
-                            <table className="table mt-2">
+                            <table className="table mt-2 align-text-top">
                                 <thead>
                                 <tr>
-                                    <td scope="col">#</td>
+                                    <td><input type="checkbox" onClick={handleCheckAll} checked={checked.length==carts.length}/></td>
                                     <td scope="col">Tên sách</td>
                                     <td scope="col">Đơn giá</td>
                                     <td scope="col">Số lượng</td>
@@ -132,9 +155,12 @@ function Cart(props) {
                                             />
                                         </td>
                                         <td>
-                                            <img
-                                                src={item.book.image}
-                                                alt=""/>
+                                            <Link to={`/detail/${item.book.id}`}>
+                                                <img
+                                                    src={item.book.image}
+                                                    alt=""/>
+                                            </Link>
+
                                         </td>
                                         <td>{item.book.salePrice.toLocaleString('vi', {
                                             style: 'currency',
@@ -142,7 +168,6 @@ function Cart(props) {
                                         })}</td>
                                         <td>
                                             <div className="d-flex justify-content-center mt-3 mx-4">
-
                                                 <button className="btn btn-outline-dark"
                                                         onClick={() => decreaseAmount(item)}>-
                                                 </button>
@@ -153,7 +178,6 @@ function Cart(props) {
                                                 <button className="btn btn-outline-dark"
                                                         onClick={() => increaseAmount(item)}>+
                                                 </button>
-
                                             </div>
                                         </td>
                                         <td>{(item.book.salePrice * item.quantity).toLocaleString('vi', {
@@ -199,7 +223,7 @@ function Cart(props) {
                                 <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
                                     <div className="mt-3 mx-3 d-flex justify-content-between">
                                         <p>Tổng tiền </p>
-                                        <h5>{totalMoney.toLocaleString('vi', {
+                                        <h5>{calculationMoney().toLocaleString('vi', {
                                             style: 'currency',
                                             currency: 'VND'
                                         })}</h5>

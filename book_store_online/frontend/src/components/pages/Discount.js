@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useSearchParams} from "react-router-dom";
-import * as bookService from "../../services/BookService"
+import * as bookService from "../../services/BookService";
+import {Link} from "react-router-dom";
 
-function BestSeller(props) {
+function Discount(props) {
     const [list, setList] = useState([]);
     const [page,setPage]=useState(0);
     const [totalPage,setTotalPage]=useState(0);
     const getAllBookBySearch=async ()=>{
-        let res=await bookService.getAllBookBestSeller(page);
+        let res=await bookService.getAllBookDiscountSeller(page);
         if(res.status===200){
             setList(res.data.content);
             setTotalPage(res.data.totalPages);
@@ -23,7 +23,7 @@ function BestSeller(props) {
     },[page]);
     return (
         <div className="list-book p-3">
-            <p className="fs-4 text-center">Sách bán chạy nhất</p>
+            <p className="fs-4 text-center">Sách giảm giá</p>
             <div className="row">
                 {list.map((item) => (
                     <div key={item.id} className="col-lg-3 col-md-4 col-sm-6 col-xl-3">
@@ -63,4 +63,4 @@ function BestSeller(props) {
     );
 }
 
-export default BestSeller;
+export default Discount;

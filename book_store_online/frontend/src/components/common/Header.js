@@ -23,8 +23,6 @@ function Header(props) {
         <div className="position-fixed w-100 z-1 top-0">
             <nav className="navbar navbar-expand-lg shadow navbar-light p-0">
                 <div className="container">
-
-
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -54,10 +52,10 @@ function Header(props) {
                                 <Link to="/" className="nav-link mx-2 text-uppercase">Trang chủ</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link mx-2 text-uppercase">Sách mới</Link>
+                                <Link to="/discount" className="nav-link mx-2 text-uppercase">Sách giảm giá</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="best_seller" className="nav-link mx-2 text-uppercase">Sách bán chạy</Link>
+                                <Link to="/best_seller" className="nav-link mx-2 text-uppercase">Sách bán chạy</Link>
                             </li>
                         </ul>
                         <ul className="navbar-nav ms-auto ">
@@ -82,7 +80,6 @@ function Header(props) {
                                         </Link>
                                         <ul className="dropdown-menu">
                                             <li><Link to="/order" className="dropdown-item">Lịch sử mua hàng</Link></li>
-                                            <li><Link className="dropdown-item">Thông tin tài khoản</Link></li>
                                             <li><Link className="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout">Đăng xuất</Link></li>
                                         </ul>
                                     </div>

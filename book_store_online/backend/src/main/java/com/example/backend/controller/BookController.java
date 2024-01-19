@@ -30,11 +30,14 @@ public class BookController {
             @RequestParam(value = "category", defaultValue = "", required = false) String category
     ) {
         Pageable pageable = PageRequest.of(page, 8);
-        Page<IBookDto> list = bookService.showList(pageable, name, author, minPrice, maxPrice, category);
+        Page<IBookDto> list = bookService.showList(pageable, trim(name), trim(author), trim(minPrice), trim(maxPrice), category);
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    private String trim(String string){
+        return string.trim();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -80,6 +83,13 @@ public class BookController {
         Pageable pageable = PageRequest.of(page, 8);
         return new ResponseEntity<>(bookService.showListBestSell(pageable), HttpStatus.OK);
     }
+
+    @GetMapping("/discount")
+    public ResponseEntity<?> showListDiscountBook(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        return new ResponseEntity<>(bookService.showListDiscountBook(pageable), HttpStatus.OK);
+    }
+
 
 
 }
