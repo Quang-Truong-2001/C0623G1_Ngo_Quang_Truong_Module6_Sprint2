@@ -5,9 +5,12 @@ import {toast} from "react-toastify";
 import {loginUser} from "../../redux/middlewares/AuthMiddleware";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {getInformation} from "../../redux/middlewares/UserMiddleware";
+import {getAllCartById} from "../../redux/middlewares/CartMiddleware";
 
 
 function Login(props) {
+
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate=useNavigate();
 
@@ -33,7 +36,9 @@ function Login(props) {
             setDisableSubmit(true);
             await dispatch(loginUser(values));
             toast.success("Đăng nhập thành công !");
-            window.location.href = '/';
+            dispatch(getAllCartById());
+            dispatch(getInformation());
+            navigate("/");
         } catch (e){
             setDisableSubmit(false);
             setFieldError("password",e.data);
@@ -42,6 +47,7 @@ function Login(props) {
     }
     useEffect(()=>{
         if(user){
+            toast.success("Bạn đã đăng nhập!")
             navigate("/");
         }
     },[])
@@ -89,7 +95,6 @@ function Login(props) {
                                                         type="submit">Đăng nhập
                                                     </button>
                                                 </div>
-
                                             </Form>
                                         </Formik>
 

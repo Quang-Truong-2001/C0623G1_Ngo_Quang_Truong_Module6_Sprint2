@@ -9,6 +9,7 @@ import * as paymentService from "../../services/PayServices"
 import * as cartService from "../../services/CartService"
 import * as authService from "../../services/AuthService"
 import {Link} from "react-router-dom";
+import {getInformation} from "../../redux/middlewares/UserMiddleware";
 
 
 function Cart(props) {
@@ -121,7 +122,11 @@ function Cart(props) {
         calculationMoney();
     }, [checked, flag])
     useEffect(()=>{
-       getInfo();
+        if(user){
+            getInfo();
+            dispatch(getAllCartById());
+            dispatch(getInformation())
+        }
     },[])
     if (!user) {
         return <AccessDenied/>
@@ -131,6 +136,7 @@ function Cart(props) {
     }
     return (
         <div className="cart">
+            {console.log(checked)}
             {carts.length > 0 ?
                 <div className="row mx-0 mb-3">
                     <div className="detail col-lg-9 col-xl-9 col-sm-12 col-md-12">
@@ -139,6 +145,7 @@ function Cart(props) {
                                 <thead>
                                 <tr>
                                     <td><input type="checkbox" onClick={handleCheckAll} checked={checked.length==carts.length}/></td>
+                                    <td scope="col"></td>
                                     <td scope="col">Tên sách</td>
                                     <td scope="col">Đơn giá</td>
                                     <td scope="col">Số lượng</td>
@@ -154,12 +161,17 @@ function Cart(props) {
                                                    checked={checked.includes(item.id)}
                                             />
                                         </td>
+
                                         <td>
                                             <Link to={`/detail/${item.book.id}`}>
                                                 <img
                                                     src={item.book.image}
                                                     alt=""/>
                                             </Link>
+
+                                        </td>
+                                        <td>
+                                            {item.book.name}
 
                                         </td>
                                         <td>{item.book.salePrice.toLocaleString('vi', {
@@ -188,12 +200,11 @@ function Cart(props) {
                                             <button onClick={() => {
                                                 setDeleteBook(item)
                                             }} className="btn btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Xóa
+                                                    data-bs-target="#exampleModal"><i className="bi bi-trash"></i>
                                             </button>
                                         </td>
                                     </tr>
                                 ))}
-
                                 </tbody>
                             </table>
                         </div>

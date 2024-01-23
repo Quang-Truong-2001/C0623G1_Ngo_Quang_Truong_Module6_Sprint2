@@ -5,12 +5,13 @@ import AccessDenied from "../errors/AccessDenied";
 import {useDispatch, useSelector} from "react-redux";
 import store from "../../redux/Store";
 import {getAllCartById} from "../../redux/middlewares/CartMiddleware";
-import {getInfo} from "../../redux/middlewares/UserMiddleware";
+import {getInformation} from "../../redux/middlewares/UserMiddleware";
 import * as orderService from "../../services/OrderService"
 import {Link} from "react-router-dom";
 import OrderDetail from "./OrderDetail";
 
 function Order(props) {
+    const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('user'));
     const [list, setList] = useState([]);
     const [page, setPage] = useState(0);
@@ -23,8 +24,27 @@ function Order(props) {
         }
 
     }
+    function convertDateFormat(inputDateString) {
+        var inputDate = new Date(inputDateString);
+        if (isNaN(inputDate.getTime())) {
+            return "Invalid Date";
+        }
+        let month=inputDate.getMonth();
+        if(month==0){
+            month=1;
+        }
+        return padZero(inputDate.getDate()) + "-" + padZero(month) + "-" + inputDate.getFullYear() + " - " + padZero(inputDate.getHours()) + ":" + padZero(inputDate.getMinutes()+":" +padZero(inputDate.getSeconds()));
+    }
+
+    function padZero(value) {
+        return value < 10 ? "0" + value : value;
+    }
     useEffect(() => {
-        getAllOrder();
+        if (user) {
+            getAllOrder();
+            dispatch(getInformation());
+            dispatch(getAllCartById());
+        }
     }, [])
     if (!user) {
         return <AccessDenied/>
@@ -38,10 +58,21 @@ function Order(props) {
                         {list.map((item, index) => (
                             <div className="text-center mb-5 bg-white rounded-2">
                                 <div
-                                    className="d-flex justify-content-start ps-5 pt-3  fw-bold">
-                                    <div className="">Mã đơn hàng: {item.code}</div>
-                                    <div
-                                        className="mx-4">{new Date(item.dateBuy).toLocaleTimeString()} : {new Date(item.dateBuy).toLocaleDateString()}</div>
+                                    className="d-flex justify-content-between ps-5 pt-3  fw-bold">
+                                    <div className="">
+                                        <p><span className="fw-lighter">Mã đơn hàng: </span> <span> {item.code}</span></p>
+                                    </div>
+                                    <div className="me-4">
+                                        <p><span className="fw-lighter"> {convertDateFormat(item.dateBuy)}</span></p>
+                                    </div>
+                                </div>
+                                <div className="d-flex justify-content-between ps-5 pt-3  fw-bold">
+                                    <div>
+                                        <p><span className="fw-lighter">Địa chỉ giao hàng: </span> <span>{item.address}</span></p>
+                                    </div>
+                                    <div className="me-4">
+                                        <p><span className="fw-lighter">Số điện thoại:</span> <span>{item.phone}</span></p>
+                                    </div>
                                 </div>
                                 <hr/>
                                 <div className="my-0">

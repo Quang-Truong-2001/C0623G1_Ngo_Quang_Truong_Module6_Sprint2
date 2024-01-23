@@ -16,6 +16,7 @@ public class User {
     private String email;
     private Boolean gender;
     private Date birthDay;
+    @Column(name = "phone", columnDefinition = "varchar(10)")
     private String phone;
     private String address;
     @OneToOne

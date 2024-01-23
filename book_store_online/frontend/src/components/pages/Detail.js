@@ -5,7 +5,7 @@ import async from "async";
 import {useNavigate, useParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
-import {addCartMiddle} from "../../redux/middlewares/CartMiddleware";
+import {addCartMiddle, getAllCartById} from "../../redux/middlewares/CartMiddleware";
 
 function Detail(props) {
     const dispatch = useDispatch();
@@ -49,9 +49,10 @@ function Detail(props) {
             if (amount > 0) {
                 cart = {quantity: amount, idAccount: user.id, idBook: id, salePrice: book.salePrice}
             } else {
-                cart = {quantity: 1, idAccount: user.id, idBook: id}
+                cart = {quantity: 1, idAccount: user.id, idBook: id,salePrice: book.salePrice}
             }
             dispatch(addCartMiddle(cart));
+            dispatch(getAllCartById());
             navigate("/cart")
         }
     }
@@ -76,10 +77,10 @@ function Detail(props) {
                             <img className="img-detail"
                                  srcSet="https://salt.tikicdn.com/ts/upload/d7/56/04/b93b8c666e13f49971483596ef14800f.png"
                                  width="89" height="20" alt="is_authentic"/>
-                            <p>Tác giả: <span>{book.author.name}</span></p>
+                            <p>Tác giả: <span className="fw-medium">{book.author.name}</span></p>
                         </div>
                         <div className="d-flex align-items-center mt-2">
-                            <h6 className="ms-1">{book.name}</h6>
+                            <h5 className="ms-1">{book.name}</h5>
                         </div>
                         <div className="d-flex align-items-center mt-1">
                             <h6 className="ms-1 text-decoration-line-through">{book.price.toLocaleString('vi', {

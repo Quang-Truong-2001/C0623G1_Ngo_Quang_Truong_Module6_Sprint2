@@ -36,7 +36,7 @@ public class OrderController {
 
     @GetMapping("/list")
     public ResponseEntity<?> showList(@RequestParam("id") Long id, @RequestParam(value = "page", defaultValue = "0",required = false) Integer page){
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 20);
         Page<OrderBook> list=service.showList(pageable,id);
         if(list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -45,7 +45,7 @@ public class OrderController {
     }
     @GetMapping("/list/detail")
     public ResponseEntity<Page<OrderDetail>> showListDetail(@RequestParam("id") Long idOrder, @RequestParam(value = "page",defaultValue = "0", required = false) Integer page){
-        Pageable pageable= PageRequest.of(page,5);
+        Pageable pageable= PageRequest.of(page,20);
         Page<OrderDetail> list=service.showListDetailOrder(pageable,idOrder);
         if(list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

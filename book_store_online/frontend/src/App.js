@@ -24,7 +24,7 @@ function App() {
     return (
         <>
             <Header/>
-            <div className="content">
+            <div className="content" style={{minHeight: "65vh"}}>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>

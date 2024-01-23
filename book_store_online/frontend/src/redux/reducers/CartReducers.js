@@ -12,18 +12,16 @@ export const cartReducer = (cart = [], action) => {
             return temp;
         case UPDATE_CART:
             let update=[...cart];
-            if(payload.quantity >=payload.quantity && payload.quantity>0){
-                for(let i=0;i<update.length;i++){
-                    if(update[i].id===payload.id){
-                        update[i].quantity=payload.quantity;
-                        break;
-                    }
+            for(let i=0;i<update.length;i++){
+                if(update[i].id===payload.id && update[i].book.quantity>=payload.quantity&&payload.quantity>0){
+                    update[i].quantity=payload.quantity;
+                    break;
                 }
             }
             return update;
         case ADD_CART:
             let add=[...cart];
-            add=add.filter(value=>value.book.id !== payload.book.id);
+            add=add.filter( value=> value.book.id !== payload.book.id);
             add=[...add,payload];
             return add;
         default:

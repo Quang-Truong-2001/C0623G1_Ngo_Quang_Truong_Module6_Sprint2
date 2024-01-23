@@ -3,7 +3,7 @@ import React from 'react';
 function AccessDenied(props) {
     return (
         <>
-            <div className="container d-flex justify-content-center">
+            <div style={{height:"80vh"}} className="container d-flex justify-content-center">
                 <div className="row">
                     <div className="container my-5">
                         <div className="access-denied-container mt-5">

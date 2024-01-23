@@ -1,11 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import * as bookService from "../../services/BookService"
 import * as categoryService from "../../services/CategoryService"
 import Carousel from "./Carousel";
 import {Slider} from "@mui/material";
 import {toast} from "react-toastify";
+import {addCartMiddle, getAllCartById} from "../../redux/middlewares/CartMiddleware";
+import {getInformation} from "../../redux/middlewares/UserMiddleware";
+import {useDispatch} from "react-redux";
 function Home(props) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [list, setList] = useState([]);
     const [value, setValue] = useState([0, 500]);
     const [min,setMin]=useState(0);
@@ -73,6 +79,18 @@ function Home(props) {
             setPage(0);
         }
     }
+    const createCart = (value) => {
+        if (!user) {
+            toast.warning("Bạn cần đăng nhập");
+            navigate("/login");
+        } else {
+            let cart;
+            cart = {quantity: 1, idAccount: user.id, idBook: value.id,salePrice: value.salePrice}
+            dispatch(addCartMiddle(cart));
+            dispatch(getAllCartById());
+            toast.success("Thêm vào giỏ hàng thành công");
+        }
+    }
     const resetValue=()=>{
         setPage(0);
         setName("");
@@ -86,6 +104,8 @@ function Home(props) {
     }, [name,author,min,max,page,category])
     useEffect(() => {
         getListCategory();
+        dispatch(getAllCartById());
+        dispatch(getInformation());
     }, [])
     return (
         <>
@@ -152,9 +172,10 @@ function Home(props) {
                                 {list.map((item) => (
                                     <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-xl-3">
                                         <div className="card shadow m-2 text-center rounded-2">
-                                            <img className="rounded-2 mt-3"
-                                                 src={item.image}
-                                                 alt=""/>
+                                            <Link  to={`/detail/${item.id}`} ><img style={{width:"90%"}} className="rounded-2 mt-3"
+                                                                                   src={item.image}
+                                                                                   alt=""/></Link>
+
                                             <p className="mt-3 fw-medium">{item.name}</p>
                                             <div className="d-flex justify-content-around">
                                                 <p className="text-danger mb-3 rounded-2"> <span className="me-2 text-dark rounded-2 text-decoration-line-through">{item.price.toLocaleString('vi', {
@@ -164,8 +185,10 @@ function Home(props) {
                                                     style: 'currency',
                                                     currency: 'VND'
                                                 })}</p>
-                                                <Link to={`/detail/${item.id}`} className="btn btn-detail mb-3 rounded-2">Chi
-                                                    tiết</Link>
+                                                <button className="btn btn-detail mb-3 rounded-2" onClick={()=>createCart(item)}>
+                                                    + <i className="bi bi-cart"></i></button>
+                                                {/*<Link to={`/detail/${item.id}`} className="btn btn-detail mb-3 rounded-2">Chi*/}
+                                                {/*    tiết</Link>*/}
                                             </div>
                                         </div>
                                     </div>
@@ -174,7 +197,8 @@ function Home(props) {
                             </div>
                             <div className="my-4">
                                 <div className="d-flex justify-content-center">
-                                    {page===0?null:
+                                    {page===0?
+                                        <button className="btn-pagination"><i className="bi bi-arrow-left"></i></button>:
                                         <button className="btn-pagination" onClick={()=>setPage(page-1)}><i className="bi bi-arrow-left"></i></button>
                                     }
                                     <button className="btn-pagination mx-2">{page+1}</button>

@@ -4,10 +4,9 @@ import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import store from "../../redux/Store";
 import {getAllCartById} from "../../redux/middlewares/CartMiddleware";
-import {getInfo} from "../../redux/middlewares/UserMiddleware";
+import {getInformation} from "../../redux/middlewares/UserMiddleware";
 
 function Header(props) {
-    const dispatch = useDispatch();
     const carts = useSelector(store => store.carts);
     const info = useSelector(store => store.infos);
     const user = JSON.parse(localStorage.getItem('user'));
@@ -15,10 +14,6 @@ function Header(props) {
     if (!user || user.roles.includes("ROLE_ADMIN")) {
         isUser = true;
     }
-    useEffect(() => {
-        dispatch(getAllCartById())
-        dispatch(getInfo())
-    }, [])
     return (
         <div className="position-fixed w-100 z-1 top-0">
             <nav className="navbar navbar-expand-lg shadow navbar-light p-0">
@@ -49,13 +44,13 @@ function Header(props) {
                         <ul className="navbar-nav ms-auto ">
 
                             <li className="nav-item">
-                                <Link to="/" className="nav-link mx-2 text-uppercase">Trang chủ</Link>
+                                <Link to="/" className="nav-link mx-2 text-uppercase fw-medium">Trang chủ</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/discount" className="nav-link mx-2 text-uppercase">Sách giảm giá</Link>
+                                <Link to="/discount" className="nav-link mx-2 text-uppercase fw-medium">Sách giảm giá</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/best_seller" className="nav-link mx-2 text-uppercase">Sách bán chạy</Link>
+                                <Link to="/best_seller" className="nav-link mx-2 text-uppercase fw-medium">Sách bán chạy</Link>
                             </li>
                         </ul>
                         <ul className="navbar-nav ms-auto ">
@@ -63,14 +58,15 @@ function Header(props) {
                                 <li className="nav-item me-5">
                                     <Link to="/cart" className="nav-link text-uppercase"><i
                                         className="bi bi-cart"></i>{carts.length > 0 ?
-                                        <div className="cart-number">{carts.length}</div> : null}</Link>
+                                        <div className="cart-number">{carts.length}</div> : null}
+                                    </Link>
                                 </li>
                             }
-
                             {!user ?
                                 <li className="nav-item">
                                     <Link to="/login" className="nav-link mb-3 text-uppercase"><i
-                                        className="bi bi-person-circle"></i></Link>
+                                        className="bi bi-person-circle"></i>
+                                    </Link>
                                 </li>
                                 : <>
                                     <div className="dropdown">

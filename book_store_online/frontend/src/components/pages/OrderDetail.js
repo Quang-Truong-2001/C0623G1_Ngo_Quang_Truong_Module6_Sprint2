@@ -32,10 +32,9 @@ function OrderDetail(props) {
             {list.map((item, index) => (
                 <tr key={item.id}>
                     <td>
-                        <img
+                        <Link to={`/detail/${item.book.id}`} className="btn btn-detail mb-3 rounded-2"><img
                             src={item.book.image}
-                            alt=""/>
-
+                            alt=""/></Link>
                     </td>
                     <td>
                         {item.book.name}

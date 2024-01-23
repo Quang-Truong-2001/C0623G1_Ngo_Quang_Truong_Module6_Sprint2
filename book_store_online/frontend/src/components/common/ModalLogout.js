@@ -24,7 +24,7 @@ function ModalLogout() {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="button" className="btn btn-danger" onClick={logOutUser}>Xác nhận</button>
+                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={logOutUser}>Xác nhận</button>
                         </div>
                     </div>
                 </div>

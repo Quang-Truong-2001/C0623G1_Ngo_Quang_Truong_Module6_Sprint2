@@ -29,7 +29,7 @@ public class BookController {
             @RequestParam(value = "max", defaultValue = "10000000000", required = false) String maxPrice,
             @RequestParam(value = "category", defaultValue = "", required = false) String category
     ) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 12);
         Page<IBookDto> list = bookService.showList(pageable, trim(name), trim(author), trim(minPrice), trim(maxPrice), category);
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -80,16 +80,13 @@ public class BookController {
 
     @GetMapping("/best_seller")
     public ResponseEntity<?> showListBookBestSeller(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 12);
         return new ResponseEntity<>(bookService.showListBestSell(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/discount")
     public ResponseEntity<?> showListDiscountBook(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 12);
         return new ResponseEntity<>(bookService.showListDiscountBook(pageable), HttpStatus.OK);
     }
-
-
-
 }
