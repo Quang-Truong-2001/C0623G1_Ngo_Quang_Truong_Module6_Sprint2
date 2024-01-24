@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface IOrderDetailRepository extends JpaRepository<OrderDetail,Long> {
     @Query(value = "select * from order_details where order_id = :id", nativeQuery = true)
-    Page<OrderDetail> showListDetailOrder(Pageable pageable, @Param("id") Long idOrder);
+    List<OrderDetail> showListDetailOrder(@Param("id") Long idOrder);
 }

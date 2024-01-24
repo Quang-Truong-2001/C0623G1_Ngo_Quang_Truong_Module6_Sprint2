@@ -14,25 +14,21 @@ function Order(props) {
     const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('user'));
     const [list, setList] = useState([]);
-    const [page, setPage] = useState(0);
     const getAllOrder = async () => {
-        let res = await orderService.getAllOrder(user.id, page);
+        let res = await orderService.getAllOrder(user.id);
         if (res.status === 200) {
-            setList(res.data.content);
+            setList(res.data);
         } else {
             setList([]);
         }
 
     }
     function convertDateFormat(inputDateString) {
-        var inputDate = new Date(inputDateString);
+        let inputDate = new Date(inputDateString);
         if (isNaN(inputDate.getTime())) {
             return "Invalid Date";
         }
-        let month=inputDate.getMonth();
-        if(month==0){
-            month=1;
-        }
+        let month=inputDate.getMonth()+1;
         return padZero(inputDate.getDate()) + "-" + padZero(month) + "-" + inputDate.getFullYear() + " - " + padZero(inputDate.getHours()) + ":" + padZero(inputDate.getMinutes()+":" +padZero(inputDate.getSeconds()));
     }
 
@@ -58,7 +54,7 @@ function Order(props) {
                         {list.map((item, index) => (
                             <div className="text-center mb-5 bg-white rounded-2">
                                 <div
-                                    className="d-flex justify-content-between ps-5 pt-3  fw-bold">
+                                    className="d-flex justify-content-between ps-2 pt-3  fw-bold">
                                     <div className="">
                                         <p><span className="fw-lighter">Mã đơn hàng: </span> <span> {item.code}</span></p>
                                     </div>
@@ -66,7 +62,7 @@ function Order(props) {
                                         <p><span className="fw-lighter"> {convertDateFormat(item.dateBuy)}</span></p>
                                     </div>
                                 </div>
-                                <div className="d-flex justify-content-between ps-5 pt-3  fw-bold">
+                                <div className="d-flex justify-content-between ps-2 pt-3  fw-bold">
                                     <div>
                                         <p><span className="fw-lighter">Địa chỉ giao hàng: </span> <span>{item.address}</span></p>
                                     </div>

@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IOderService {
-    void createOrder(LocalDateTime date, String code, Long idAccount, String phone, String address);
+    void createOrder(LocalDateTime date, String code, Long idAccount, String phone, String address,String name);
     void createOrderDetail(Long quantity, Double salePrice, Long idBook, Long idOrder);
-    Page<OrderBook> showList(Pageable pageable, Long id);
+    List<OrderBook> showList(Long id);
 
-    Page<OrderDetail> showListDetailOrder(Pageable pageable,Long idOrder);
+    List<OrderDetail> showListDetailOrder(Long idOrder);
     OrderBook findOrderBookByCode(String code);
     Long findIdOrderByCode(String code);
     void updateTotalMoney(Double totalMoney,Long id);

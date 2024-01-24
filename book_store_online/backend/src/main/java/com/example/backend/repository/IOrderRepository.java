@@ -18,15 +18,15 @@ import java.util.List;
 public interface IOrderRepository extends JpaRepository<OrderBook, Long> {
     @Modifying
     @Transactional
-    @Query(value = "insert into orders(code,date_buy,account_id,phone, address) values(:code,:date,:idAccount,:phone,:address)", nativeQuery = true)
-    void createOrder(@Param("date") LocalDateTime date, @Param("code") String code, @Param("idAccount") Long idAccount, @Param("phone") String phone, @Param("address") String address);
+    @Query(value = "insert into orders(code,date_buy,account_id,phone, address,name) values(:code,:date,:idAccount,:phone,:address,:name)", nativeQuery = true)
+    void createOrder(@Param("date") LocalDateTime date, @Param("code") String code, @Param("idAccount") Long idAccount, @Param("phone") String phone, @Param("address") String address,@Param("name") String name);
 
     @Modifying
     @Transactional
     @Query(value = "insert into order_details(quantity,sale_price, book_id,order_id) values(:quantity,:salePrice,:idBook,:idOrder)", nativeQuery = true)
     void createOrderDetail(@Param("quantity") Long quantity,@Param("salePrice") Double salePrice,@Param("idBook") Long idBook,@Param("idOrder") Long idOrder);
     @Query(value = "select * from orders where account_id =:id order by date_buy desc", nativeQuery = true)
-    Page<OrderBook> showList(Pageable pageable, @Param("id") Long id);
+    List<OrderBook> showList(@Param("id") Long id);
 
     OrderBook findByCode(String code);
     @Query(value = "select o.id from orders as o where o.code = :code", nativeQuery = true)

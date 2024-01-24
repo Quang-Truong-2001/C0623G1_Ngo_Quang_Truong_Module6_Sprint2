@@ -46,7 +46,6 @@ public class AuthController {
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>("Thông tin đăng nhập không chính xác.",HttpStatus.UNAUTHORIZED);
         }
-
         try {
             myUserDetailService.loadUserByUsername(login.getUsername());
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));

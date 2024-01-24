@@ -15,6 +15,7 @@ public class OrderBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
+    private String name;
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime dateBuy;
     private String address;
@@ -96,5 +97,13 @@ public class OrderBook {
 
     public void setTotalMoney(Double totalMoney) {
         this.totalMoney = totalMoney;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -6,12 +6,10 @@ import {Link, useParams} from "react-router-dom";
 function OrderDetail(props) {
     const id = props.idOrder;
     const [list, setList] = useState([]);
-    const [page, setPage] = useState(0);
     const getAllOrder = async () => {
-        let res = await orderService.getAllDetailOrder(id, page);
-        console.log(res)
+        let res = await orderService.getAllDetailOrder(id);
         if (res.status === 200) {
-            setList(res.data.content);
+            setList(res.data);
         } else {
             setList([]);
         }

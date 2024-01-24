@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.CartDto;
+import com.example.backend.dto.order.OrderCheck;
 import com.example.backend.dto.order.OrderDto;
 import com.example.backend.model.book.Book;
 import com.example.backend.model.book.OrderBook;
@@ -18,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @CrossOrigin("*")
@@ -35,18 +33,16 @@ public class OrderController {
     private IBookService bookService;
 
     @GetMapping("/list")
-    public ResponseEntity<?> showList(@RequestParam("id") Long id, @RequestParam(value = "page", defaultValue = "0",required = false) Integer page){
-        Pageable pageable = PageRequest.of(page, 20);
-        Page<OrderBook> list=service.showList(pageable,id);
+    public ResponseEntity<?> showList(@RequestParam("id") Long id){
+        List<OrderBook> list=service.showList(id);
         if(list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
     @GetMapping("/list/detail")
-    public ResponseEntity<Page<OrderDetail>> showListDetail(@RequestParam("id") Long idOrder, @RequestParam(value = "page",defaultValue = "0", required = false) Integer page){
-        Pageable pageable= PageRequest.of(page,20);
-        Page<OrderDetail> list=service.showListDetailOrder(pageable,idOrder);
+    public ResponseEntity<List<OrderDetail>> showListDetail(@RequestParam("id") Long idOrder){
+        List<OrderDetail> list=service.showListDetailOrder(idOrder);
         if(list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -56,12 +52,31 @@ public class OrderController {
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
-
         for (int i = 0; i < 10; i++) {
             int index = random.nextInt(characters.length());
             sb.append(characters.charAt(index));
         }
         return sb.toString();
+    }
+    @PostMapping("/check")
+    public ResponseEntity<?> checkOrder(@RequestBody OrderDto orderDto){
+        Cart cart;
+        Book book;
+        Boolean is=true;
+        for(Long o:orderDto.getList()){
+            cart=cartService.findCartById(o);
+            book=bookService.findBookById(cart.getBook().getId());
+            if(book.getQuantity()==0){
+                is=false;
+                cartService.deleteCart(cart.getId());
+                continue;
+            }
+            if(cart.getQuantity()>book.getQuantity()){
+                is=false;
+                cartService.updateCart(o, book.getQuantity());
+            }
+        }
+        return new ResponseEntity<>(is,HttpStatus.OK);
     }
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(@RequestBody OrderDto orderDto){
@@ -73,7 +88,7 @@ public class OrderController {
             code=generateRandomString();
             orderBook=service.findOrderBookByCode(code);
         } while (orderBook!=null);
-        service.createOrder(date,code,orderDto.getIdAccount(), orderDto.getPhone(), orderDto.getAddress());
+        service.createOrder(date,code,orderDto.getIdAccount(), orderDto.getPhone(), orderDto.getAddress(), orderDto.getName());
         Long id=service.findIdOrderByCode(code);
         Cart cart;
         Double totalMoney = 0.0;

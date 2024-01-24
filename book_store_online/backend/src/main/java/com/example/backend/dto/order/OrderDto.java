@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class OrderDto {
     private Long idAccount;
+    private String name;
     private String address;
     private String phone;
     private Set<Long> list;
@@ -42,5 +43,13 @@ public class OrderDto {
 
     public void setList(Set<Long> list) {
         this.list = list;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

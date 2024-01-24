@@ -23,8 +23,8 @@ public class OrderServiceImpl implements IOderService {
 
 
     @Override
-    public void createOrder(LocalDateTime date, String code, Long idAccount, String phone, String address) {
-        repository.createOrder(date, code, idAccount,phone, address);
+    public void createOrder(LocalDateTime date, String code, Long idAccount, String phone, String address, String name) {
+        repository.createOrder(date, code, idAccount,phone, address,name);
     }
 
     @Override
@@ -33,13 +33,13 @@ public class OrderServiceImpl implements IOderService {
     }
 
     @Override
-    public Page<OrderBook> showList(Pageable pageable, Long id) {
-        return repository.showList(pageable, id);
+    public List<OrderBook> showList(Long id) {
+        return repository.showList(id);
     }
 
     @Override
-    public Page<OrderDetail> showListDetailOrder(Pageable pageable, Long idOrder) {
-        return orderDetailRepository.showListDetailOrder(pageable, idOrder);
+    public List<OrderDetail> showListDetailOrder(Long idOrder) {
+        return orderDetailRepository.showListDetailOrder(idOrder);
     }
 
     @Override

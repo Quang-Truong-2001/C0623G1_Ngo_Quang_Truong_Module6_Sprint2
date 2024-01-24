@@ -31,6 +31,9 @@ public interface IBookRepository extends JpaRepository<Book, Integer> {
             "on b.author_id=a.id\n" +
             "join order_details as o\n" +
             "on b.id=o.book_id\n" +
+            "join orders as od\n" +
+            "on o.order_id=od.id\n" +
+            "where od.date_buy >= curdate() - interval 30 day\n" +
             "group by o.book_id\n" +
             "order by sum(o.quantity) desc",nativeQuery = true)
     Page<IBookDto> showListBestSell(Pageable pageable);

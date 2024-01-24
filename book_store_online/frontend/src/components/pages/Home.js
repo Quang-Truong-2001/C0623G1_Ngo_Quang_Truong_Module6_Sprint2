@@ -8,16 +8,22 @@ import {toast} from "react-toastify";
 import {addCartMiddle, getAllCartById} from "../../redux/middlewares/CartMiddleware";
 import {getInformation} from "../../redux/middlewares/UserMiddleware";
 import {useDispatch} from "react-redux";
+import useDebounce from "../common/Debouce";
 function Home(props) {
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
     const [value, setValue] = useState([0, 500]);
-    const [min,setMin]=useState(0);
-    const [max,setMax]=useState(500);
+
     const [name, setName] = useState("");
     const [author, setAuthor] = useState("");
+    const [min,setMin]=useState(0);
+    const [max,setMax]=useState(500);
+    const debouncedSearchName = useDebounce(name, 400);
+    const debouncedSearchCategory = useDebounce(author, 400);
+    const debouncedSearchMin = useDebounce(min, 400);
+    const debouncedSearchMax = useDebounce(max, 400);
     const [page,setPage]=useState(0);
     const [totalPage,setTotalPage]=useState(0);
     const [listCategory,setListCategory]=useState([]);
@@ -31,16 +37,24 @@ function Home(props) {
     };
 
     const handleChangeMin=(e)=>{
-        setMin(e.target.value);
-        setValue([e.target.value,max]);
-        setPage(0);
+        if(checkRegexNumber(e.target.value)){
+            setMin(e.target.value);
+            setValue([e.target.value,max]);
+            setPage(0);
+        } else {
+            toast.error("Vui lòng nhập đúng số tiền")
+        }
     }
     const handleChangeMax=(e)=>{
-        setMax(e.target.value);
-        setValue([min,e.target.value]);
+        if(checkRegexNumber(e.target.value)){
+            setMax(e.target.value);
+            setValue([min,e.target.value]);
+        } else {
+            toast.error("Vui lòng nhập đúng số tiền")
+        }
     }
     const handleChangeName=(e)=>{
-        if(e.target.value!=="`"){
+        if(checkRegexString(e.target.value)){
             setName(e.target.value);
             setPage(0);
         } else {
@@ -48,7 +62,7 @@ function Home(props) {
         }
     }
     const handleChangeAuthor=(e)=>{
-        if(e.target.value!=="`"){
+        if(checkRegexString(e.target.value)){
             setAuthor(e.target.value);
             setPage(0);
         } else {
@@ -56,8 +70,16 @@ function Home(props) {
         }
 
     }
+    function checkRegexNumber(value) {
+        let regex = /^[012345679 ]*$/;
+        return regex.test(value);
+    }
+    function checkRegexString(value) {
+        let regex = /^[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ012345679 ]*$/;
+        return regex.test(value);
+    }
     const handleChangeCategory=(e)=>{
-        if(e.target.value!=="`"){
+        if(checkRegexString(e.target.value)){
             setCategory(e.target.value);
         } else {
             toast.error("Lỗi")
@@ -101,7 +123,7 @@ function Home(props) {
     }
     useEffect(() => {
         getAllBook();
-    }, [name,author,min,max,page,category])
+    }, [debouncedSearchMin,debouncedSearchMax,page,category,debouncedSearchName,debouncedSearchCategory])
     useEffect(() => {
         getListCategory();
         dispatch(getAllCartById());
@@ -116,11 +138,11 @@ function Home(props) {
                         <div className="p-2">
                             <div className="mx-2 my-4">
                                 <label className="ms-1 mb-1">Tên sách: </label>
-                                <input className="big-input form-control" value={name} onChange={handleChangeName}/>
+                                <input className="form-control" value={name} onChange={handleChangeName}/>
                             </div>
                             <div className="mx-2 my-4">
                                 <label className="ms-1 mb-1">Tác giả: </label>
-                                <input className="big-input form-control" value={author} onChange={handleChangeAuthor}/>
+                                <input className="form-control" value={author} onChange={handleChangeAuthor}/>
                             </div>
                             <div className="mx-2 my-4">
                                 <label className="ms-1 mb-1">Thể loại </label>
@@ -170,28 +192,32 @@ function Home(props) {
                         <>
                             <div className="row">
                                 {list.map((item) => (
-                                    <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-xl-3">
-                                        <div className="card shadow m-2 text-center rounded-2">
-                                            <Link  to={`/detail/${item.id}`} ><img style={{width:"90%"}} className="rounded-2 mt-3"
-                                                                                   src={item.image}
-                                                                                   alt=""/></Link>
+                                    <>
+                                        <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-xl-3">
+                                            <div className="card shadow m-2 text-center rounded-2">
+                                                <Link  to={`/detail/${item.id}`} ><img style={{width:"90%"}} className="rounded-2 mt-3"
+                                                                                       src={item.image}
+                                                                                       alt=""/></Link>
 
-                                            <p className="mt-3 fw-medium">{item.name}</p>
-                                            <div className="d-flex justify-content-around">
-                                                <p className="text-danger mb-3 rounded-2"> <span className="me-2 text-dark rounded-2 text-decoration-line-through">{item.price.toLocaleString('vi', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                })}</span>{item.salePrice.toLocaleString('vi', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                })}</p>
-                                                <button className="btn btn-detail mb-3 rounded-2" onClick={()=>createCart(item)}>
-                                                    + <i className="bi bi-cart"></i></button>
-                                                {/*<Link to={`/detail/${item.id}`} className="btn btn-detail mb-3 rounded-2">Chi*/}
-                                                {/*    tiết</Link>*/}
+                                                <p className="mt-3 fw-medium">{item.name}</p>
+                                                <div className="d-flex justify-content-around">
+                                                    <p className="text-danger mb-3 rounded-2"> <span className="me-2 text-dark rounded-2 text-decoration-line-through">{item.price.toLocaleString('vi', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    })}</span>{item.salePrice.toLocaleString('vi', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    })}</p>
+                                                    {item.quantity>0?
+                                                        <button className="btn btn-detail mb-3 rounded-2" onClick={()=>createCart(item)}>
+                                                            + <i className="bi bi-cart"></i></button>
+                                                    :
+                                                    null
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 ))}
 
                             </div>
@@ -210,7 +236,6 @@ function Home(props) {
                         </>
                     }
                 </div>
-
             </div>
         </>
     );

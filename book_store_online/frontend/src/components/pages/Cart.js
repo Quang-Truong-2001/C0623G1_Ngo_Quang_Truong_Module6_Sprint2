@@ -6,7 +6,7 @@ import {getAllCartById, deleteCartMiddle, changeQuantity} from "../../redux/midd
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import * as paymentService from "../../services/PayServices"
-import * as cartService from "../../services/CartService"
+import * as orderService from "../../services/OrderService"
 import * as authService from "../../services/AuthService"
 import {Link} from "react-router-dom";
 import {getInformation} from "../../redux/middlewares/UserMiddleware";
@@ -59,6 +59,7 @@ function Cart(props) {
         setInfo(res);
     }
     const initValue = {
+        name: info.name,
         address: info.address,
         phone: info.phone
     }
@@ -93,14 +94,16 @@ function Cart(props) {
         setFlag(!flag);
     }
     const changeAmountInput = (item, e) => {
-        if (item.book.quantity >= e.target.value && e.target.value > 0) {
-            dispatch(changeQuantity(item.id, e.target.value * 1));
-        } else if (item.book.quantity < e.target.value) {
-            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
-            dispatch(changeQuantity(item.id, item.book.quantity));
-        } else {
-            dispatch(changeQuantity(item.id, 1));
+        if(e.target.value * 1<=0){
+            return;
         }
+        if (e.target.value * 1 > item.book.quantity) {
+            dispatch(changeQuantity(item.id, item.book.quantity*1));
+            setFlag(!flag);
+            toast.warning("Số lượng bạn chọn vượt quá số lượng còn lại");
+            return;
+        }
+        dispatch(changeQuantity(item.id, e.target.value * 1));
         setFlag(!flag);
     }
 
@@ -110,10 +113,17 @@ function Cart(props) {
             localStorage.removeItem('order');
         }
         if (checked.length > 0) {
-            order = {idAccount: user.id, address: value.address, phone: value.phone, list: checked}
-            localStorage.setItem('order', JSON.stringify(order));
-            let url = await paymentService.payment(calculationMoney()*1);
-            window.location.href = url;
+            order = {idAccount: user.id, address: value.address, phone: value.phone, list: checked, name:value.name}
+            let res=await orderService.checkOrder(order);
+            if(res.data){
+                localStorage.setItem('order', JSON.stringify(order));
+                let url = await paymentService.payment(calculationMoney()*1);
+                window.location.href = url;
+            } else {
+                toast.warning("Sản phẩm của bạn đã hết hàng");
+                setChecked([]);
+                dispatch(getAllCartById());
+            }
         } else {
             toast.warning("Bạn chưa chọn sản phẩm cần mua");
         }
@@ -136,11 +146,10 @@ function Cart(props) {
     }
     return (
         <div className="cart">
-            {console.log(checked)}
             {carts.length > 0 ?
                 <div className="row mx-0 mb-3">
                     <div className="detail col-lg-9 col-xl-9 col-sm-12 col-md-12">
-                        <div className="card text-center">
+                        <div className="card text-center table-responsive">
                             <table className="table mt-2 align-text-top">
                                 <thead>
                                 <tr>
@@ -216,6 +225,15 @@ function Cart(props) {
                             <Form>
                                 <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
                                     <div className="m-3">
+                                        <p className="mb-2">Nguời nhận </p>
+                                        <Field className="form-control" type="text" id="w3review" name="name"
+                                               rows="4" cols="50"/>
+                                        <ErrorMessage name="name" className="text-danger"
+                                                      component="small"/>
+                                    </div>
+                                </div>
+                                <div className="card rounded-3 mb-3 mt-sm-3 mt-xl-0 mt-lg-0">
+                                    <div className="m-3">
                                         <p className="mb-2">Giao tới </p>
                                         <Field className="form-control" type="text" id="w3review" name="address"
                                                rows="4" cols="50"/>
@@ -243,7 +261,6 @@ function Cart(props) {
                                 </div>
                             </Form>
                         </Formik>
-
                     </div>
                 </div>
                 : <div><h6 className="text-center">Bạn chưa có đơn hàng nào!</h6></div>
